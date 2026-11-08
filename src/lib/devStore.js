@@ -1,12 +1,19 @@
 // Server-only queries for the developer panel (MongoDB).
 import { col, NO_ID } from "@/lib/db";
 import { listClubs } from "@/lib/clubStore";
-import { listEvents } from "@/lib/eventStore";
-import { sumQuota } from "@/lib/eventSchema";
+import { clubEventStats } from "@/lib/eventStore";
+import { memo } from "@/lib/memo";
 
 export const ROLES = ["user", "club_admin", "gate", "developer"];
 
-export async function devOverview() {
+// Dashboards are read-heavy and a few seconds old is fine, so they are cached for 5 s.
+// Concurrent requests share one computation. Writes that change them call forget("dev:").
+const DASH_TTL = 5000;
+
+export const devOverview = () => memo("dev:overview", DASH_TTL, computeOverview);
+export const clubsDetail = () => memo("dev:clubs", DASH_TTL, computeClubsDetail);
+
+async function computeOverview() {
     const [users, bookings, scans, leads] = await Promise.all([col("users"), col("bookings"), col("scan_logs"), col("business_leads")]);
     const [roles, byStatus, byResult, newLeads] = await Promise.all([
         users.aggregate([{ $group: { _id: "$role", n: { $sum: 1 } } }]).toArray(),
@@ -22,39 +29,54 @@ export async function devOverview() {
     };
 }
 
-/** Every club with its events, quota allocation, booking counts and staff. */
-export async function clubsDetail() {
-    const clubs = await listClubs({ includeInactive: true });
-    const events = await listEvents({ includeDrafts: true });
-    const [bookings, users] = await Promise.all([col("bookings"), col("users")]);
-    const counts = (
-        await bookings
+/**
+ * Every club with its events, quota allocation, booking counts and staff.
+ * One pass per data source, grouped into hash maps by club id, so the work is O(clubs + events + groups)
+ * rather than filtering every list once per club.
+ */
+async function computeClubsDetail() {
+    const [clubs, eventStats, bookings, users] = await Promise.all([
+        listClubs({ includeInactive: true }),
+        clubEventStats(),
+        col("bookings"),
+        col("users"),
+    ]);
+    const [counts, staff] = await Promise.all([
+        bookings
             .aggregate([{ $group: { _id: { club_id: "$club_id", status: "$status" }, n: { $sum: 1 }, amount: { $sum: "$amount" } } }])
-            .toArray()
-    ).map((r) => ({ club_id: r._id.club_id, status: r._id.status, n: r.n, amount: r.amount }));
-    const staff = await users
-        .find(
-            { role: { $in: ["club_admin", "gate"] }, club_id: { $ne: null } },
-            { projection: { _id: 0, id: 1, name: 1, email: 1, role: 1, club_id: 1 } },
-        )
-        .toArray();
+            .toArray(),
+        users
+            .find(
+                { role: { $in: ["club_admin", "gate"] }, club_id: { $ne: null } },
+                { projection: { _id: 0, id: 1, name: 1, email: 1, role: 1, club_id: 1 } },
+            )
+            .toArray(),
+    ]);
+
+    const bookingsByClub = new Map(); // club_id -> { byStatus, revenue }
+    for (const r of counts) {
+        const entry = bookingsByClub.get(r._id.club_id) || { byStatus: {}, revenue: 0 };
+        entry.byStatus[r._id.status] = r.n;
+        if (r._id.status === "approved") entry.revenue += r.amount;
+        bookingsByClub.set(r._id.club_id, entry);
+    }
+    const staffByClub = new Map();
+    for (const m of staff) {
+        if (!staffByClub.has(m.club_id)) staffByClub.set(m.club_id, []);
+        staffByClub.get(m.club_id).push(m);
+    }
 
     return clubs.map((c) => {
-        const mine = events.filter((e) => e.club_id === c.id);
-        const byStatus = {};
-        let revenue = 0;
-        for (const r of counts.filter((x) => x.club_id === c.id)) {
-            byStatus[r.status] = r.n;
-            if (r.status === "approved") revenue += r.amount;
-        }
+        const ev = eventStats.get(c.id) || { total: 0, published: 0, quota: 0 };
+        const b = bookingsByClub.get(c.id) || { byStatus: {}, revenue: 0 };
         return {
             ...c,
-            events_total: mine.length,
-            events_published: mine.filter((e) => e.status === "published").length,
-            quota_allocated: mine.reduce((s, e) => s + sumQuota(e.tiers), 0),
-            bookings: byStatus,
-            revenue,
-            staff: staff.filter((s) => s.club_id === c.id),
+            events_total: ev.total,
+            events_published: ev.published,
+            quota_allocated: ev.quota,
+            bookings: b.byStatus,
+            revenue: b.revenue,
+            staff: staffByClub.get(c.id) || [],
         };
     });
 }

@@ -38,7 +38,15 @@ export default function HomePage() {
     const [club, setClub] = useState(null);
     const [genre, setGenre] = useState("all");
     const [q, setQ] = useState("");
+    const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
+
+    // Wait for a pause in typing before searching: one request per word instead of one per key.
+    const [dq, setDq] = useState("");
+    useEffect(() => {
+        const t = setTimeout(() => setDq(q.trim()), 250);
+        return () => clearTimeout(t);
+    }, [q]);
 
     useEffect(() => {
         const cityParam = city === "all" ? undefined : city;
@@ -47,17 +55,28 @@ export default function HomePage() {
 
     useEffect(() => {
         setLoading(true);
+        // Cancel the previous request when the filters change, so a slow old answer can never
+        // overwrite a newer one.
+        const ctrl = new AbortController();
         api.get("/events", {
+            signal: ctrl.signal,
             params: {
                 city: city === "all" ? undefined : city,
                 genre,
-                q: q || undefined,
+                q: dq || undefined,
                 club_id: club || undefined,
             },
         })
-            .then((r) => setEvents(r.data))
-            .finally(() => setLoading(false));
-    }, [city, genre, q, club]);
+            .then((r) => {
+                setEvents(r.data);
+                setTotal(Number(r.headers["x-total-count"]) || r.data.length);
+                setLoading(false);
+            })
+            .catch((e) => {
+                if (e.code !== "ERR_CANCELED") setLoading(false);
+            });
+        return () => ctrl.abort();
+    }, [city, genre, dq, club]);
 
     return (
         <AppShell>
@@ -110,7 +129,7 @@ export default function HomePage() {
                 <div className="mb-6">
                     <div className="flex items-center justify-between mb-3">
                         <h2 className="font-display text-lg font-semibold">Pick your city</h2>
-                        <span className="text-xs text-white/50 font-body">{events.length} events</span>
+                        <span className="text-xs text-white/50 font-body">{total} events</span>
                     </div>
                     <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5 md:mx-0 md:px-0">
                         {CITY_OPTIONS.map((c) => (
@@ -167,7 +186,7 @@ export default function HomePage() {
                                         genre === g.slug ? "ring-purple-400" : "ring-white/10 group-hover:ring-white/30"
                                     }`}
                                 >
-                                    <img src={g.img} alt={g.name} className="w-full h-full object-cover" />
+                                    <img loading="lazy" decoding="async" src={g.img} alt={g.name} className="w-full h-full object-cover" />
                                 </div>
                                 <span className={`text-xs font-body ${genre === g.slug ? "text-white" : "text-white/60"}`}>
                                     {g.name}

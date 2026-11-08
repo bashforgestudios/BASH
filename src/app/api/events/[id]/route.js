@@ -1,10 +1,10 @@
 import { getEvent } from "@/lib/eventStore";
-import { fail, ok, route } from "@/lib/http";
+import { fail, ok, publicCache, route } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
 
 export const GET = route(async (_req, { params }) => {
     const event = await getEvent(params.id);
     if (!event) return fail("Event not found", 404);
-    return ok(event);
+    return ok(event, 200, publicCache(5));
 });

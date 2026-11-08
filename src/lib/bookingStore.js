@@ -61,12 +61,19 @@ async function withTicketCode(run) {
     throw new Error("Could not allocate a ticket code");
 }
 
-/** Count of seats held per "eventId::tierName" (awaiting payment, pending or approved). */
-export async function soldCounts() {
+/**
+ * Count of seats held per "eventId::tierName" (awaiting payment, pending or approved).
+ * Pass the event ids you care about: the query then reads only those events through the
+ * (event_id, status, tier, quantity) index and never touches the booking documents.
+ * Always fresh (no cache), because the booking route uses it to enforce quotas.
+ */
+export async function soldCounts(eventIds) {
     const bookings = await col("bookings");
+    const match = { status: { $in: ACTIVE } };
+    if (eventIds) match.event_id = { $in: eventIds };
     const rows = await bookings
         .aggregate([
-            { $match: { status: { $in: ACTIVE } } },
+            { $match: match },
             { $group: { _id: { event_id: "$event_id", tier: "$tier" }, n: { $sum: "$quantity" } } },
         ])
         .toArray();

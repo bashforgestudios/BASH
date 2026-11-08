@@ -274,7 +274,7 @@ function EventRow({ ev, onEdit, onToggle }) {
             className="rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col md:flex-row md:items-center gap-4"
         >
             {ev.image ? (
-                <img src={ev.image} alt="" className="w-20 h-20 rounded-xl object-cover shrink-0" />
+                <img loading="lazy" decoding="async" src={ev.image} alt="" className="w-20 h-20 rounded-xl object-cover shrink-0" />
             ) : (
                 <div className="w-20 h-20 rounded-xl bg-white/5 border border-dashed border-white/15 shrink-0" />
             )}

@@ -112,7 +112,7 @@ export default function TicketCard({ ticket, highlighted = false }) {
                 <div className="ticket-top overflow-hidden rounded-t-[28px] bg-white">
                     <div className="relative h-52 md:h-60">
                         {ticket.event_image ? (
-                            <img src={ticket.event_image} alt={ticket.event_title} className="h-full w-full object-cover" />
+                            <img loading="lazy" decoding="async" src={ticket.event_image} alt={ticket.event_title} className="h-full w-full object-cover" />
                         ) : (
                             <div className="h-full w-full bg-gradient-to-br from-blue-500 to-purple-600" />
                         )}

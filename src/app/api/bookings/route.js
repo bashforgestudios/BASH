@@ -26,7 +26,7 @@ export const POST = route(async (req) => {
 
     // Quota: never sell past the category quota (cancelled and rejected bookings release seats)
     if (tier.quota) {
-        const sold = (await soldCounts()).get(`${event.id}::${tier.name}`) || 0;
+        const sold = (await soldCounts([event.id])).get(`${event.id}::${tier.name}`) || 0;
         const left = Math.max(0, tier.quota - sold);
         if (quantity > left) {
             return fail(left === 0 ? `${tier.name} is sold out` : `Only ${left} ${tier.name} tickets left`, 409);

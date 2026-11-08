@@ -5,7 +5,10 @@ import { useNav } from "@/lib/useNav";
 import { toast } from "sonner";
 import { CheckCircle2, XCircle, AlertTriangle, ScanLine, QrCode, Keyboard, Loader2, Phone, Mail } from "lucide-react";
 import AppShell from "@/components/AppShell";
-import QRScanner from "@/components/QRScanner";
+import dynamic from "next/dynamic";
+
+// jsQR and the camera code are only needed on this page, and only once the scanner is shown.
+const QRScanner = dynamic(() => import("@/components/QRScanner"), { ssr: false, loading: () => null });
 import { Badge, Btn, Card, inputCls, fmtDateTime } from "@/components/PanelUI";
 import { api, formatErr } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";

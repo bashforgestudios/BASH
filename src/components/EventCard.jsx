@@ -19,6 +19,7 @@ export default function EventCard({ event, index = 0 }) {
                 className="block relative rounded-3xl overflow-hidden h-[420px] sm:h-[460px] group"
             >
                 <img
+                    decoding="async"
                     src={event.image}
                     alt={event.title}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
