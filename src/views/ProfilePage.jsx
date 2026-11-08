@@ -1,16 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useNav } from "@/lib/useNav";
 import { toast } from "sonner";
 import {
-    Camera, Copy, Instagram, Loader2, Check, Ticket, CalendarCheck, QrCode as QrIcon, RotateCw,
-    LogOut, KeyRound, Bell, Shield, UserRound, ChevronRight, Eye, EyeOff,
+    Camera, Copy, Instagram, Loader2, Check, RotateCw, LogOut, KeyRound, Bell,
+    ChevronRight, Eye, EyeOff, Pencil, Settings, ArrowLeft,
 } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import QRCode from "@/components/QRCode";
-import { Btn, Card, Field, inputCls } from "@/components/PanelUI";
+import Modal from "@/components/Modal";
+import { Btn, Field, inputCls } from "@/components/PanelUI";
 import { api, formatErr } from "@/lib/api";
 import { CITIES } from "@/lib/geo";
 import { useAuth } from "@/context/AuthContext";
@@ -31,7 +32,9 @@ export default function ProfilePage() {
     const { user, loading, logout } = useAuth();
     const nav = useNav();
     const [profile, setProfile] = useState(null);
-    const [busy, setBusy] = useState(null); // "top" | "side" | "details" | "pw"
+    const [busy, setBusy] = useState(null); // "top" | "side" (photo uploads)
+    const [editing, setEditing] = useState(false);
+    const [settings, setSettings] = useState(false);
 
     useEffect(() => {
         if (!loading && !user) nav("/login?next=/profile");
@@ -87,43 +90,46 @@ export default function ProfilePage() {
     return (
         <AppShell>
             <div className="max-w-5xl mx-auto px-4 md:px-10 py-8 space-y-8">
-                <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight">My Profile</h1>
+                <div className="flex items-center justify-between gap-3">
+                    <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight">My Profile</h1>
+                    <div className="flex items-center gap-2">
+                        <Btn variant="primary" onClick={() => setEditing(true)} data-testid="edit-profile">
+                            <Pencil className="w-4 h-4" /> Edit profile
+                        </Btn>
+                        <button
+                            type="button"
+                            onClick={() => setSettings(true)}
+                            aria-label="Settings"
+                            title="Settings"
+                            data-testid="open-settings"
+                            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+                        >
+                            <Settings className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
 
                 <div className="grid lg:grid-cols-[340px_1fr] gap-8 items-start">
                     <MemberCard profile={profile} busy={busy} onPhoto={onPhoto} copyId={copyId} />
-
                     <div className="space-y-6 min-w-0">
-                        <Stats stats={profile.stats} />
                         <QuickLinks />
-                        <EditDetails profile={profile} setProfile={setProfile} busy={busy} setBusy={setBusy} />
+                        <p className="font-body text-xs text-white/40">
+                            Photos are JPG, PNG or WebP, up to 2 MB. Your full ID number is never shown; only the last digits.
+                        </p>
                     </div>
                 </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                    <Security busy={busy} setBusy={setBusy} />
-                    <Preferences />
-                </div>
-
-                <Card title="Account" subtitle="Signed in as">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <span className="font-body text-sm text-white/70 break-all">{profile.email}</span>
-                        <Btn
-                            variant="danger"
-                            data-testid="profile-logout"
-                            onClick={() => {
-                                logout();
-                                nav("/");
-                            }}
-                        >
-                            <LogOut className="w-4 h-4" /> Log out
-                        </Btn>
-                    </div>
-                </Card>
-
-                <p className="font-body text-xs text-white/40">
-                    Photos are JPG, PNG or WebP, up to 2 MB. Your full ID number is never shown here; only the last digits.
-                </p>
             </div>
+
+            <EditProfileModal open={editing} onClose={() => setEditing(false)} profile={profile} setProfile={setProfile} />
+            <SettingsModal
+                open={settings}
+                onClose={() => setSettings(false)}
+                email={profile.email}
+                onLogout={async () => {
+                    await logout();
+                    nav("/");
+                }}
+            />
         </AppShell>
     );
 }
@@ -335,29 +341,6 @@ function PhotoButton({ busy, onFile, label, testid }) {
     );
 }
 
-/* ------------------------------------------------------------------ */
-/* Right column                                                        */
-/* ------------------------------------------------------------------ */
-
-function Stats({ stats }) {
-    const items = [
-        [Ticket, stats.tickets, "Tickets"],
-        [CalendarCheck, stats.events, "Events"],
-        [QrIcon, stats.attended, "Checked in"],
-    ];
-    return (
-        <div className="grid grid-cols-3 gap-3" data-testid="profile-stats">
-            {items.map(([Icon, n, label]) => (
-                <div key={label} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <Icon className="w-4 h-4 text-fuchsia-300 mb-2" />
-                    <div className="font-display text-2xl font-bold">{n}</div>
-                    <div className="font-body text-[11px] uppercase tracking-widest text-white/50">{label}</div>
-                </div>
-            ))}
-        </div>
-    );
-}
-
 function QuickLinks() {
     const links = [
         ["/tickets", "My Tickets", "See your passes and QR codes"],
@@ -378,113 +361,180 @@ function QuickLinks() {
     );
 }
 
-function EditDetails({ profile, setProfile, busy, setBusy }) {
-    const initial = useMemo(
-        () => ({
-            name: profile.name || "",
-            phone: profile.phone || "",
-            city: profile.city || "",
-            instagram: profile.instagram ? `@${profile.instagram}` : "",
-        }),
-        [profile],
-    );
+/* ------------------------------------------------------------------ */
+/* Edit profile: one popup, one form                                   */
+/* ------------------------------------------------------------------ */
+
+function EditProfileModal({ open, onClose, profile, setProfile }) {
+    const initial = {
+        name: profile.name || "",
+        phone: profile.phone || "",
+        city: profile.city || "",
+        instagram: profile.instagram ? `@${profile.instagram}` : "",
+    };
     const [v, setV] = useState(initial);
-    useEffect(() => setV(initial), [initial]);
+    const [saving, setSaving] = useState(false);
+
+    // start from the saved values every time it opens, so Cancel discards edits
+    useEffect(() => {
+        if (open) setV(initial);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open]);
+
     const set = (k) => (e) => setV((x) => ({ ...x, [k]: e.target.value }));
     const dirty = Object.keys(initial).some((k) => initial[k] !== v[k]);
 
     const save = async (e) => {
         e.preventDefault();
-        setBusy("details");
+        setSaving(true);
         try {
-            const { data } = await api.patch("/profile", v);
+            const changed = Object.fromEntries(Object.keys(initial).filter((k) => initial[k] !== v[k]).map((k) => [k, v[k]]));
+            const { data } = await api.patch("/profile", changed);
             setProfile(data);
             toast.success("Profile updated");
+            onClose();
         } catch (err) {
             toast.error(errText(err));
         } finally {
-            setBusy(null);
+            setSaving(false);
         }
     };
 
     return (
-        <Card title="Edit details" subtitle="Your name and contact info. Email and date of birth can't be changed here.">
+        <Modal open={open} onClose={onClose} title="Edit profile" subtitle="Email and date of birth can't be changed here." busy={saving}>
             <form onSubmit={save} className="space-y-3" data-testid="edit-details">
                 <Field label="Full name">
-                    <input value={v.name} onChange={set("name")} className={inputCls} data-testid="edit-name" />
+                    <input value={v.name} onChange={set("name")} maxLength={80} className={inputCls} data-testid="edit-name" />
                 </Field>
-                <div className="grid sm:grid-cols-2 gap-3">
-                    <Field label="Mobile">
-                        <input value={v.phone} onChange={set("phone")} inputMode="numeric" className={inputCls} data-testid="edit-phone" />
-                    </Field>
-                    <Field label="City">
-                        <select value={v.city} onChange={set("city")} className={inputCls} data-testid="edit-city">
-                            <option value="" className="text-black">Select city</option>
-                            {CITIES.map((c) => (
-                                <option key={c.slug} value={c.slug} className="text-black">{c.name}</option>
-                            ))}
-                        </select>
-                    </Field>
-                </div>
-                <Field label="Instagram" hint="Optional. Leave empty to remove.">
+                <Field label="Mobile">
+                    <input value={v.phone} onChange={set("phone")} inputMode="numeric" className={inputCls} data-testid="edit-phone" />
+                </Field>
+                <Field label="City">
+                    <select value={v.city} onChange={set("city")} className={inputCls} data-testid="edit-city">
+                        <option value="" className="text-black">Select city</option>
+                        {CITIES.map((c) => (
+                            <option key={c.slug} value={c.slug} className="text-black">{c.name}</option>
+                        ))}
+                    </select>
+                </Field>
+                <Field label="Instagram" hint="Optional. Clear the box to remove it.">
                     <input value={v.instagram} onChange={set("instagram")} placeholder="@yourname" className={inputCls} data-testid="instagram-input" />
                 </Field>
-                <div className="grid sm:grid-cols-2 gap-3 font-body text-xs text-white/50">
-                    <div>Email: <span className="text-white/80 break-all">{profile.email}</span></div>
-                    <div>Date of birth: <span className="text-white/80">{fmtDate(profile.dob)}</span></div>
+                <div className="flex justify-end gap-2 pt-1">
+                    <Btn type="button" onClick={onClose} disabled={saving} data-testid="cancel-edit">Cancel</Btn>
+                    <Btn variant="primary" type="submit" disabled={!dirty || saving} data-testid="details-save">
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Save
+                    </Btn>
                 </div>
-                <Btn variant="primary" type="submit" disabled={!dirty || busy === "details"} data-testid="details-save">
-                    {busy === "details" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Save changes
-                </Btn>
             </form>
-        </Card>
+        </Modal>
     );
 }
 
-function Security({ busy, setBusy }) {
+/* ------------------------------------------------------------------ */
+/* Settings: password, notifications, log out                          */
+/* ------------------------------------------------------------------ */
+
+function SettingsModal({ open, onClose, email, onLogout }) {
+    const [view, setView] = useState("menu"); // menu | password | logout
+    useEffect(() => {
+        if (open) setView("menu");
+    }, [open]);
+
+    const back = () => setView("menu");
+
+    if (view === "password") return <PasswordView open={open} onBack={back} onClose={onClose} />;
+
+    if (view === "logout") {
+        return (
+            <Modal open={open} onClose={back} title="Log out?" subtitle="You will need to sign in again on this device.">
+                <div className="flex justify-end gap-2">
+                    <Btn type="button" onClick={back} data-testid="cancel-logout">Cancel</Btn>
+                    <Btn variant="danger" onClick={onLogout} data-testid="profile-logout">
+                        <LogOut className="w-4 h-4" /> Log out
+                    </Btn>
+                </div>
+            </Modal>
+        );
+    }
+
+    return (
+        <Modal open={open} onClose={onClose} title="Settings" subtitle={email}>
+            <div className="divide-y divide-white/10" data-testid="settings-menu">
+                <button
+                    type="button"
+                    onClick={() => setView("password")}
+                    data-testid="edit-password"
+                    className="w-full flex items-center justify-between gap-3 py-3.5 text-left hover:bg-white/5 -mx-2 px-2 rounded-xl transition"
+                >
+                    <span className="flex items-center gap-3">
+                        <KeyRound className="w-4 h-4 text-white/50" />
+                        <span className="font-display font-semibold text-sm">Change password</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-white/40" />
+                </button>
+
+                <Preferences />
+
+                <button
+                    type="button"
+                    onClick={() => setView("logout")}
+                    className="w-full flex items-center gap-3 py-3.5 text-left text-red-300 hover:bg-red-500/10 -mx-2 px-2 rounded-xl transition"
+                >
+                    <LogOut className="w-4 h-4" />
+                    <span className="font-display font-semibold text-sm">Log out</span>
+                </button>
+            </div>
+            <div className="flex justify-end pt-3">
+                <Btn type="button" onClick={onClose} data-testid="close-settings">Close</Btn>
+            </div>
+        </Modal>
+    );
+}
+
+function PasswordView({ open, onBack, onClose }) {
     const [cur, setCur] = useState("");
     const [next, setNext] = useState("");
     const [show, setShow] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     const submit = async (e) => {
         e.preventDefault();
         if (next.length < 8) return toast.error("New password must be at least 8 characters");
-        setBusy("pw");
+        setSaving(true);
         try {
             await api.post("/profile/password", { current: cur, next });
-            setCur("");
-            setNext("");
             toast.success("Password changed");
+            onClose();
         } catch (err) {
             toast.error(errText(err));
         } finally {
-            setBusy(null);
+            setSaving(false);
         }
     };
 
     return (
-        <Card title="Security" subtitle="Change your password.">
+        <Modal open={open} onClose={onBack} title="Change password" subtitle="Other devices will be signed out. You stay signed in here." busy={saving}>
             <form onSubmit={submit} className="space-y-3" data-testid="change-password">
                 <Field label="Current password">
                     <input type={show ? "text" : "password"} value={cur} onChange={(e) => setCur(e.target.value)} className={inputCls} autoComplete="current-password" />
                 </Field>
                 <Field label="New password">
-                    <input type={show ? "text" : "password"} value={next} onChange={(e) => setNext(e.target.value)} className={inputCls} autoComplete="new-password" placeholder="6+ characters" />
+                    <input type={show ? "text" : "password"} value={next} onChange={(e) => setNext(e.target.value)} className={inputCls} autoComplete="new-password" placeholder="8+ characters" />
                 </Field>
-                <div className="flex items-center justify-between gap-3">
-                    <button type="button" onClick={() => setShow((s) => !s)} className="inline-flex items-center gap-1.5 font-body text-xs text-white/60 hover:text-white">
-                        {show ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />} {show ? "Hide" : "Show"}
-                    </button>
-                    <Btn variant="primary" type="submit" disabled={!cur || !next || busy === "pw"}>
-                        {busy === "pw" ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} Update password
+                <button type="button" onClick={() => setShow((x) => !x)} className="inline-flex items-center gap-1.5 font-body text-xs text-white/60 hover:text-white">
+                    {show ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />} {show ? "Hide" : "Show"} passwords
+                </button>
+                <div className="flex justify-end gap-2 pt-1">
+                    <Btn type="button" onClick={onBack} disabled={saving} data-testid="cancel-password">
+                        <ArrowLeft className="w-4 h-4" /> Back
+                    </Btn>
+                    <Btn variant="primary" type="submit" disabled={!cur || !next || saving} data-testid="save-password">
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} Update
                     </Btn>
                 </div>
-                <div className="flex items-start gap-2 font-body text-[11px] text-white/40">
-                    <Shield className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-                    Only the last digits of your ID are ever stored, and never shown in full.
-                </div>
             </form>
-        </Card>
+        </Modal>
     );
 }
 
@@ -506,30 +556,29 @@ function Preferences() {
         });
 
     return (
-        <Card title="Notifications" subtitle="Saved on this device.">
-            <div className="space-y-1" data-testid="prefs">
-                {PREFS.map(([k, title, sub]) => (
-                    <button
-                        key={k}
-                        type="button"
-                        onClick={() => toggle(k)}
-                        role="switch"
-                        aria-checked={prefs[k]}
-                        className="w-full flex items-center justify-between gap-4 rounded-xl px-2 py-3 text-left hover:bg-white/5 transition"
-                    >
-                        <span className="flex items-start gap-3 min-w-0">
-                            <Bell className="w-4 h-4 mt-1 text-white/40 shrink-0" />
-                            <span>
-                                <span className="block font-display font-semibold text-sm">{title}</span>
-                                <span className="block font-body text-xs text-white/50">{sub}</span>
-                            </span>
+        <div className="py-2" data-testid="prefs">
+            <div className="font-body text-[11px] uppercase tracking-widest text-white/45 pt-2 pb-1">Notifications (this device)</div>
+            {PREFS.map(([k, title, sub]) => (
+                <button
+                    key={k}
+                    type="button"
+                    onClick={() => toggle(k)}
+                    role="switch"
+                    aria-checked={prefs[k]}
+                    className="w-full flex items-center justify-between gap-4 rounded-xl px-2 py-2.5 -mx-2 text-left hover:bg-white/5 transition"
+                >
+                    <span className="flex items-start gap-3 min-w-0">
+                        <Bell className="w-4 h-4 mt-1 text-white/40 shrink-0" />
+                        <span>
+                            <span className="block font-display font-semibold text-sm">{title}</span>
+                            <span className="block font-body text-xs text-white/50">{sub}</span>
                         </span>
-                        <span className={`relative w-11 h-6 rounded-full shrink-0 transition ${prefs[k] ? "bg-fuchsia-500" : "bg-white/15"}`}>
-                            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${prefs[k] ? "left-[22px]" : "left-0.5"}`} />
-                        </span>
-                    </button>
-                ))}
-            </div>
-        </Card>
+                    </span>
+                    <span className={`relative w-11 h-6 rounded-full shrink-0 transition ${prefs[k] ? "bg-fuchsia-500" : "bg-white/15"}`}>
+                        <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${prefs[k] ? "left-[22px]" : "left-0.5"}`} />
+                    </span>
+                </button>
+            ))}
+        </div>
     );
 }
