@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useNav } from "@/lib/useNav";
 import { motion } from "framer-motion";
-import { ArrowLeft, CalendarPlus, Share2, ChevronRight } from "lucide-react";
+import { ArrowLeft, CalendarPlus, Share2 } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import TicketPass from "@/components/TicketPass";
 import { api, inr } from "@/lib/api";
@@ -18,7 +18,7 @@ export default function MyTicketsPage() {
     const highlight = sp.get("new");
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState("upcoming");
+    const [tab, setTab] = useState("upcoming");
 
     useEffect(() => {
         if (authLoading) return;
@@ -31,9 +31,12 @@ export default function MyTicketsPage() {
             .finally(() => setLoading(false));
     }, [user, authLoading, nav]);
 
-    const filtered = tickets.filter(
-        (t) => filter === "all" || ["approved", "pending"].includes(t.status),
-    );
+    // Past = already scanned at the gate, or no longer valid (rejected / cancelled).
+    // Upcoming = everything still waiting to be used.
+    const isPast = (t) => Boolean(t.used_at) || ["rejected", "cancelled"].includes(t.status);
+    const upcoming = tickets.filter((t) => !isPast(t) && ["approved", "pending"].includes(t.status));
+    const past = tickets.filter(isPast);
+    const filtered = tab === "upcoming" ? upcoming : past;
 
     const share = async (t) => {
         const text = `🎟 I'm going to ${t.event_title} at ${t.event_venue} on ${t.event_date}! Ticket: ${t.ticket_code}`;
@@ -70,36 +73,31 @@ export default function MyTicketsPage() {
                         <ArrowLeft className="w-4 h-4" />
                     </button>
                     <h1 className="font-display text-3xl md:text-5xl font-bold tracking-tight">
-                        My Tickets
+                        Your Events
                     </h1>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl bg-fg/5 border border-fg/10 px-5 py-3.5 mb-6">
-                    <div className="flex gap-4 font-body text-sm">
+                <div
+                    role="tablist"
+                    className="grid grid-cols-2 gap-1 rounded-2xl bg-fg/5 border border-fg/10 p-1 mb-6 font-body text-sm"
+                >
+                    {[
+                        ["upcoming", "Upcoming", upcoming.length],
+                        ["past", "Past", past.length],
+                    ].map(([id, label, n]) => (
                         <button
-                            data-testid="filter-upcoming"
-                            onClick={() => setFilter("upcoming")}
-                            className={
-                                filter === "upcoming"
-                                    ? "text-fg font-semibold"
-                                    : "text-fg/50"
-                            }
+                            key={id}
+                            role="tab"
+                            aria-selected={tab === id}
+                            data-testid={`filter-${id}`}
+                            onClick={() => setTab(id)}
+                            className={`rounded-xl px-4 py-2.5 transition ${
+                                tab === id ? "bg-fg text-canvas font-semibold" : "text-fg/60 hover:text-fg"
+                            }`}
                         >
-                            Upcoming Events
+                            {label} <span className="opacity-60">({n})</span>
                         </button>
-                        <button
-                            data-testid="filter-all"
-                            onClick={() => setFilter("all")}
-                            className={
-                                filter === "all"
-                                    ? "text-fg font-semibold"
-                                    : "text-fg/50"
-                            }
-                        >
-                            All
-                        </button>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-fg/40" />
+                    ))}
                 </div>
 
                 {loading ? (
@@ -109,10 +107,16 @@ export default function MyTicketsPage() {
                         className="text-center py-20 text-fg/50 font-body"
                         data-testid="no-tickets-msg"
                     >
-                        No tickets yet.{" "}
-                        <Link href="/" className="text-brand-ink underline">
-                            Browse events
-                        </Link>
+                        {tab === "upcoming" ? (
+                            <>
+                                No upcoming tickets.{" "}
+                                <Link href="/" className="text-brand-ink underline">
+                                    Browse events
+                                </Link>
+                            </>
+                        ) : (
+                            "No past events yet. Tickets move here once they're scanned at the gate."
+                        )}
                     </div>
                 ) : (
                     <div className="space-y-10">

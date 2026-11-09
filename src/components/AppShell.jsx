@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LogoMark, Wordmark } from "@/components/Logo";
 import NavLink from "@/components/NavLink";
 import LocationChip from "@/components/LocationChip";
@@ -37,19 +38,40 @@ const activeCls = (isActive) =>
 export default function AppShell({ children, hideBottomNav = false }) {
     const { user, logout } = useAuth();
     const nav = useNav();
+    const pathname = usePathname();
     const links = LINKS[user ? user.role || "user" : "guest"] || LINKS.user;
+
+    // Bottom-nav tabs: the role's links plus Log out / Sign in.
+    const items = [
+        ...links.map((l) => ({ ...l, testid: `mob-nav-${l.id}` })),
+        user
+            ? {
+                  id: "logout",
+                  label: "Log out",
+                  icon: LogOut,
+                  testid: "mob-nav-logout",
+                  onClick: () => {
+                      logout();
+                      nav("/");
+                  },
+              }
+            : { id: "account", label: "Sign in", icon: User, href: "/login", testid: "mob-nav-account" },
+    ];
+    const activeIndex = items.findIndex(
+        (it) => it.href && (it.href === "/" ? pathname === "/" : pathname === it.href || pathname.startsWith(it.href + "/")),
+    );
 
     return (
         <div className="min-h-screen w-full flex flex-col">
             {/* Top bar — only on >= md */}
             <header className="hidden md:flex items-center justify-between px-10 py-4 border-b border-fg/5 sticky top-0 z-40 backdrop-blur-xl bg-canvas/70">
-                <div className="flex flex-col">
+                <div className="flex items-center gap-4">
                     <Link href="/" className="flex items-center gap-2" data-testid="brand-link">
                         <LogoMark size={36} className="text-brand-fg" />
                         <Wordmark className="text-xl" />
                     </Link>
-                    {/* Location sits directly under the logo */}
-                    <LocationChip className="ml-11 -mt-0.5" />
+                    {/* City dropdown sits right next to the logo */}
+                    <LocationChip />
                 </div>
 
                 <nav className="flex items-center gap-8 font-body text-sm text-fg/70">
@@ -103,50 +125,42 @@ export default function AppShell({ children, hideBottomNav = false }) {
 
             <main className="flex-1">{children}</main>
 
-            {/* Mobile bottom nav */}
+            {/* Mobile bottom nav: a frosted-glass pill slides under the active tab */}
             {!hideBottomNav && (
-                <nav className="md:hidden sticky bottom-0 z-40 bg-canvas/90 backdrop-blur-xl border-t border-fg/10 px-4 py-3 flex items-center justify-around">
-                    {links.map((l) => {
-                        const Icon = l.icon;
-                        return (
-                            <NavLink
-                                key={l.id}
-                                href={l.href}
-                                end={l.href === "/"}
-                                data-testid={`mob-nav-${l.id}`}
-                                className={({ isActive }) =>
-                                    `flex flex-col items-center gap-1 text-xs ${isActive ? "text-fg" : "text-fg/50"}`
-                                }
-                            >
-                                <Icon className="w-5 h-5" />
-                                {l.label}
-                            </NavLink>
-                        );
-                    })}
-                    {user ? (
-                        <button
-                            onClick={() => {
-                                logout();
-                                nav("/");
-                            }}
-                            data-testid="mob-nav-logout"
-                            className="flex flex-col items-center gap-1 text-xs text-fg/50"
-                        >
-                            <LogOut className="w-5 h-5" />
-                            Log out
-                        </button>
-                    ) : (
-                        <NavLink
-                            href="/login"
-                            data-testid="mob-nav-account"
-                            className={({ isActive }) =>
-                                `flex flex-col items-center gap-1 text-xs ${isActive ? "text-fg" : "text-fg/50"}`
-                            }
-                        >
-                            <User className="w-5 h-5" />
-                            Sign in
-                        </NavLink>
-                    )}
+                <nav className="md:hidden sticky bottom-0 z-40 px-4 pb-3 pt-2 bg-gradient-to-t from-canvas via-canvas/80 to-transparent pointer-events-none">
+                    <div className="glass-nav pointer-events-auto relative flex items-stretch rounded-full p-1.5">
+                        {activeIndex >= 0 && (
+                            <span
+                                aria-hidden
+                                className="glass-slider absolute bottom-1.5 left-1.5 top-1.5 rounded-full"
+                                style={{
+                                    width: `calc((100% - 0.75rem) / ${items.length})`,
+                                    transform: `translateX(${activeIndex * 100}%)`,
+                                }}
+                            />
+                        )}
+                        {items.map((it, i) => {
+                            const Icon = it.icon;
+                            const cls = `relative z-10 flex flex-1 flex-col items-center gap-1 rounded-full py-2 text-[11px] font-body transition-colors duration-300 ${
+                                i === activeIndex ? "text-fg" : "text-fg/50"
+                            }`;
+                            const inner = (
+                                <>
+                                    <Icon className={`h-5 w-5 transition-transform duration-300 ${i === activeIndex ? "scale-110" : ""}`} />
+                                    {it.label}
+                                </>
+                            );
+                            return it.href ? (
+                                <NavLink key={it.id} href={it.href} end={it.href === "/"} data-testid={it.testid} className={cls}>
+                                    {inner}
+                                </NavLink>
+                            ) : (
+                                <button key={it.id} onClick={it.onClick} data-testid={it.testid} className={cls}>
+                                    {inner}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </nav>
             )}
         </div>

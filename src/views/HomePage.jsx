@@ -5,13 +5,10 @@ import { motion } from "framer-motion";
 import { Search, Bell } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import EventCard from "@/components/EventCard";
-import ClubCard from "@/components/ClubCard";
 import LocationChip from "@/components/LocationChip";
 import { api } from "@/lib/api";
-import { CITIES, DEFAULT_CITY } from "@/lib/geo";
+import { DEFAULT_CITY } from "@/lib/geo";
 import { useLocation } from "@/lib/useLocation";
-
-const CITY_OPTIONS = [{ slug: "all", name: "All India" }, ...CITIES];
 
 const GENRES = [
     { slug: "all", name: "All", img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120" },
@@ -27,18 +24,12 @@ const GENRES = [
 
 export default function HomePage() {
     const location = useLocation();
-    // The city row overrides the detected city until the detected city changes.
-    const [pick, setPick] = useState(null);
-    useEffect(() => setPick(null), [location.city]);
-    const city = pick ?? (location.city || DEFAULT_CITY);
-    const cityName = CITY_OPTIONS.find((c) => c.slug === city)?.name || "Pune";
+    // The city comes from the header dropdown (or GPS).
+    const city = location.city || DEFAULT_CITY;
 
     const [events, setEvents] = useState([]);
-    const [clubs, setClubs] = useState([]);
-    const [club, setClub] = useState(null);
     const [genre, setGenre] = useState("all");
     const [q, setQ] = useState("");
-    const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
 
     // Wait for a pause in typing before searching: one request per word instead of one per key.
@@ -49,11 +40,6 @@ export default function HomePage() {
     }, [q]);
 
     useEffect(() => {
-        const cityParam = city === "all" ? undefined : city;
-        api.get("/clubs", { params: { city: cityParam } }).then((r) => setClubs(r.data)).catch(() => setClubs([]));
-    }, [city]);
-
-    useEffect(() => {
         setLoading(true);
         // Cancel the previous request when the filters change, so a slow old answer can never
         // overwrite a newer one.
@@ -61,22 +47,20 @@ export default function HomePage() {
         api.get("/events", {
             signal: ctrl.signal,
             params: {
-                city: city === "all" ? undefined : city,
+                city,
                 genre,
                 q: dq || undefined,
-                club_id: club || undefined,
             },
         })
             .then((r) => {
                 setEvents(r.data);
-                setTotal(Number(r.headers["x-total-count"]) || r.data.length);
                 setLoading(false);
             })
             .catch((e) => {
                 if (e.code !== "ERR_CANCELED") setLoading(false);
             });
         return () => ctrl.abort();
-    }, [city, genre, dq, club]);
+    }, [city, genre, dq]);
 
     return (
         <AppShell>
@@ -124,52 +108,6 @@ export default function HomePage() {
                         Live concerts, club nights and festivals across India — booked in under 60 seconds.
                     </p>
                 </div>
-
-                {/* City row */}
-                <div className="mb-6">
-                    <div className="flex items-center justify-between mb-3">
-                        <h2 className="font-display text-lg font-semibold">Pick your city</h2>
-                        <span className="text-xs text-fg/50 font-body">{total} events</span>
-                    </div>
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5 md:mx-0 md:px-0">
-                        {CITY_OPTIONS.map((c) => (
-                            <button
-                                key={c.slug}
-                                data-testid={`city-${c.slug}`}
-                                onClick={() => {
-                                    setPick(c.slug);
-                                    setClub(null);
-                                }}
-                                className={`shrink-0 rounded-full px-4 py-2 font-body text-sm border transition ${
-                                    city === c.slug
-                                        ? "bg-fg text-canvas border-fg"
-                                        : "bg-fg/5 text-fg/80 border-fg/10 hover:bg-fg/10"
-                                }`}
-                            >
-                                {c.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Clubs in the detected city */}
-                {clubs.length > 0 && (
-                    <div className="mb-8" data-testid="clubs-strip">
-                        <h2 className="font-display text-lg font-semibold mb-3">
-                            Clubs in {cityName}
-                        </h2>
-                        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5 md:mx-0 md:px-0">
-                            {clubs.map((c) => (
-                                <ClubCard
-                                    key={c.id}
-                                    club={c}
-                                    selected={club === c.id}
-                                    onSelect={setClub}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 {/* Genre bubbles */}
                 <div className="mb-8">
@@ -220,7 +158,7 @@ export default function HomePage() {
 
                 {!loading && events.length === 0 && (
                     <div className="text-center py-20 text-fg/50 font-body" data-testid="no-events-msg">
-                        No events found. Try a different city, club or genre.
+                        No events found. Try a different city or genre.
                     </div>
                 )}
             </div>
