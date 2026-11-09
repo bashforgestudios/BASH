@@ -1,5 +1,5 @@
-import ProfilePage from "@/views/ProfilePage";
+import ProfileFlipPage from "@/views/ProfileFlipPage";
 
 export default function Page() {
-    return <ProfilePage />;
+    return <ProfileFlipPage />;
 }
