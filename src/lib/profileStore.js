@@ -44,6 +44,7 @@ export async function getProfile(userId) {
         name: u.name,
         email: u.email,
         phone: u.phone || null,
+        discoverable: Boolean(u.contacts_discoverable),
         city: u.city || null,
         dob: u.dob ? new Date(u.dob).toISOString().slice(0, 10) : null,
         role: u.role || "user",
@@ -84,7 +85,7 @@ export async function setProfilePhoto(userId, slot, dataUrl) {
     return getProfile(userId);
 }
 
-/** Body: any of { name, phone, city, instagram }. Only the fields that are sent are changed. */
+/** Body: any of { name, phone, city, instagram, discoverable }. Only the fields that are sent are changed. */
 export async function updateDetails(userId, b = {}) {
     const users = await col("users");
     const set = {};
@@ -104,6 +105,7 @@ export async function updateDetails(userId, b = {}) {
         set.city = city;
     }
     if (b.instagram !== undefined) set.instagram = normalizeInstagram(b.instagram);
+    if (b.discoverable !== undefined) set.contacts_discoverable = b.discoverable === true;
     if (Object.keys(set).length) await users.updateOne({ id: userId }, { $set: set });
     return getProfile(userId);
 }

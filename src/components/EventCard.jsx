@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Calendar, Heart, MessageCircle, Send } from "lucide-react";
 import { inr } from "@/lib/api";
+import { sized, srcSet } from "@/lib/img";
 
 export default function EventCard({ event, index = 0 }) {
     return (
@@ -20,10 +21,14 @@ export default function EventCard({ event, index = 0 }) {
             >
                 <img
                     decoding="async"
-                    src={event.image}
+                    src={sized(event.image, 800)}
+                    srcSet={srcSet(event.image, [480, 800, 1200])}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt={event.title}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    loading="lazy"
+                    // the first row is on screen at once: load it first. Everything else waits until scrolled near.
+                    loading={index < 3 ? "eager" : "lazy"}
+                    fetchPriority={index < 3 ? "high" : "auto"}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
 

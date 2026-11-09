@@ -255,3 +255,38 @@ html {
     opacity: 0.5;
     background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.14), transparent 55%);
 }
+
+/* ---------- Splash / loading screen ---------- */
+#bash-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(var(--canvas));
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+    /* safety net: if JavaScript never loads, get out of the way after 8 s */
+    animation: splash-failsafe 0s linear 8s forwards;
+}
+#bash-splash.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* taps go through straight away, even while it fades */
+}
+.splash-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: splash-pulse 1.4s ease-in-out infinite;
+}
+@keyframes splash-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.94); opacity: 0.75; }
+}
+@keyframes splash-failsafe {
+    to { opacity: 0; visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .splash-logo { animation: none; }
+}

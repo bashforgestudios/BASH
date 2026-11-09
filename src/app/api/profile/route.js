@@ -11,7 +11,7 @@ export const GET = route(async (req) => {
     return ok(await getProfile(user.id));
 });
 
-// Body: any of { name, phone, city, instagram }
+// Body: any of { name, phone, city, instagram, discoverable }
 export const PATCH = route(async (req) => {
     const { user, error } = await requireUser(req);
     if (error) return error;

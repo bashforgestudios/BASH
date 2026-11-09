@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { Clock, Lock, QrCode, X, Maximize2, CheckCircle2 } from "lucide-react";
+import { sized } from "@/lib/img";
 import QRCode from "@/components/QRCode";
 
 export const STATUS_STYLE = {
@@ -112,7 +113,7 @@ export default function TicketCard({ ticket, highlighted = false }) {
                 <div className="ticket-top overflow-hidden rounded-t-[28px] bg-white">
                     <div className="relative h-52 md:h-60">
                         {ticket.event_image ? (
-                            <img loading="lazy" decoding="async" src={ticket.event_image} alt={ticket.event_title} className="h-full w-full object-cover" />
+                            <img loading="lazy" decoding="async" src={sized(ticket.event_image, 480)} alt={ticket.event_title} className="h-full w-full object-cover" />
                         ) : (
                             <div className="h-full w-full bg-gradient-to-br from-blue-500 to-purple-600" />
                         )}

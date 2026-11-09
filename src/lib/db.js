@@ -27,7 +27,7 @@ function getClientPromise() {
         
         const client = new MongoClient(uri, {
             maxPoolSize: 10,
-            serverSelectionTimeoutMS: 8000,
+            serverSelectionTimeoutMS: 5000,
             retryWrites: true,
         });
         globalThis._bashMongo = client.connect().catch((e) => {
@@ -59,6 +59,7 @@ const INDEXES = [
     ["users", { bash_id: 1 }, { unique: true, partialFilterExpression: { bash_id: { $type: "string" } } }],
     ["users", { role: 1, club_id: 1 }, {}],
     ["users", { created_at: -1 }, {}],
+    ["users", { phone: 1 }, { partialFilterExpression: { phone: { $type: "string" } } }],
     ["events", { id: 1 }, { unique: true }],
     ["events", { created_at: -1 }, {}],
     ["events", { status: 1, city_slug: 1, created_at: -1 }, {}],
@@ -130,20 +131,21 @@ export function ensureReady() {
     if (!ready) {
         ready = (async () => {
             const db = await getDb();
-            for (const [name, keys, opts] of INDEXES) {
-                await db.collection(name).createIndex(keys, opts);
-            }
-
-            for (const [id, name, enabled] of GATEWAY_SEEDS) {
-                await db.collection("payment_gateways").updateOne(
-                    { id },
-                    { $setOnInsert: { id, name, enabled, mode: "test", key_id: null, updated_at: new Date() } },
-                    { upsert: true },
-                );
-            }
+            // All in parallel: one network round trip instead of ~35 in a row. On a cold serverless start
+            // with a remote database that was the biggest part of the first request's delay.
+            await Promise.all([
+                ...INDEXES.map(([name, keys, opts]) => db.collection(name).createIndex(keys, opts)),
+                ...GATEWAY_SEEDS.map(([id, name, enabled]) =>
+                    db.collection("payment_gateways").updateOne(
+                        { id },
+                        { $setOnInsert: { id, name, enabled, mode: "test", key_id: null, updated_at: new Date() } },
+                        { upsert: true },
+                    ),
+                ),
+            ]);
 
             if (demoEnabled()) {
-                for (const acc of demoAccounts()) {
+                await Promise.all(demoAccounts().map(async (acc) => {
                     const salt = crypto.randomBytes(16).toString("hex");
                     const hash = (await scrypt(acc.password, salt, 64)).toString("hex");
                     await db.collection("users").updateOne(
@@ -163,7 +165,7 @@ export function ensureReady() {
                         },
                         { upsert: true },
                     );
-                }
+                }));
             }
         })().catch((e) => {
             ready = null; // let the next request try again

@@ -82,6 +82,7 @@ export async function createUser({ name, email, password, role = "user", club_id
         instagram: null,
         photo_top: null,
         photo_side: null,
+        contacts_discoverable: false, // opt-in: friends who have this number may see which events they are going to
         token_version: 0,
         created_at: new Date(),
     };

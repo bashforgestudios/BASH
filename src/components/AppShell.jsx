@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LogoMark, Wordmark } from "@/components/Logo";
 import NavLink from "@/components/NavLink";
 import LocationChip from "@/components/LocationChip";
 import { useNav } from "@/lib/useNav";
@@ -44,10 +45,8 @@ export default function AppShell({ children, hideBottomNav = false }) {
             <header className="hidden md:flex items-center justify-between px-10 py-4 border-b border-fg/5 sticky top-0 z-40 backdrop-blur-xl bg-canvas/70">
                 <div className="flex flex-col">
                     <Link href="/" className="flex items-center gap-2" data-testid="brand-link">
-                        <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center font-display text-brand-fg font-bold">
-                            B
-                        </div>
-                        <span className="font-display text-xl tracking-tight">Bash</span>
+                        <LogoMark size={36} className="text-brand-fg" />
+                        <Wordmark className="text-xl" />
                     </Link>
                     {/* Location sits directly under the logo */}
                     <LocationChip className="ml-11 -mt-0.5" />

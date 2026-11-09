@@ -7,6 +7,7 @@ import { useNav } from "@/lib/useNav";
 import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, Calendar, Clock, Check } from "lucide-react";
 import AppShell from "@/components/AppShell";
+import FriendsGoing from "@/components/FriendsGoing";
 import { api, inr } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -161,6 +162,10 @@ export default function EventDetailPage() {
                             {event.time}
                         </div>
                         <QuickInfo event={event} />
+                    </div>
+
+                    <div className="mb-6 max-w-2xl">
+                        <FriendsGoing eventId={event.id} nextPath={`/events/${id}`} />
                     </div>
 
                     <p className="font-body text-fg/70 leading-relaxed max-w-2xl mb-10">

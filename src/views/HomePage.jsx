@@ -173,7 +173,8 @@ export default function HomePage() {
 
                 {/* Genre bubbles */}
                 <div className="mb-8">
-                    <div className="flex gap-5 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5 md:mx-0 md:px-0">
+                    {/* py/px leave room for the 2px selection ring: overflow-x-auto also clips vertically, which cut the tops of the circles */}
+                    <div className="flex gap-5 overflow-x-auto no-scrollbar py-1.5 -mx-5 px-5 md:-mx-1.5 md:px-1.5">
                         {GENRES.map((g) => (
                             <button
                                 key={g.slug}

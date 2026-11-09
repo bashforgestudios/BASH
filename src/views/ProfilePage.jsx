@@ -126,6 +126,8 @@ export default function ProfilePage() {
                 open={settings}
                 onClose={() => setSettings(false)}
                 email={profile.email}
+                profile={profile}
+                setProfile={setProfile}
                 onLogout={async () => {
                     await logout();
                     nav("/");
@@ -436,7 +438,7 @@ function EditProfileModal({ open, onClose, profile, setProfile }) {
 /* Settings: password, notifications, log out                          */
 /* ------------------------------------------------------------------ */
 
-function SettingsModal({ open, onClose, email, onLogout }) {
+function SettingsModal({ open, onClose, email, profile, setProfile, onLogout }) {
     const [view, setView] = useState("menu"); // menu | password | logout
     useEffect(() => {
         if (open) setView("menu");
@@ -478,6 +480,8 @@ function SettingsModal({ open, onClose, email, onLogout }) {
                 </button>
 
                 <Preferences />
+
+                <Privacy profile={profile} setProfile={setProfile} />
 
                 <button
                     type="button"
@@ -579,6 +583,47 @@ function PasswordView({ open, onBack, onClose }) {
                 </div>
             </form>
         </Modal>
+    );
+}
+
+function Privacy({ profile, setProfile }) {
+    const [saving, setSaving] = useState(false);
+    const on = Boolean(profile.discoverable);
+    const toggle = async () => {
+        setSaving(true);
+        try {
+            const { data } = await api.patch("/profile", { discoverable: !on });
+            setProfile(data);
+            toast.success(!on ? "Contacts can now see events you're going to" : "You are hidden from contacts");
+        } catch (e) {
+            toast.error(errText(e));
+        } finally {
+            setSaving(false);
+        }
+    };
+    return (
+        <div className="py-3.5" data-testid="privacy">
+            <div className="font-body text-[11px] uppercase tracking-widest text-fg/45 mb-1">Privacy</div>
+            <button
+                type="button"
+                onClick={toggle}
+                disabled={saving}
+                role="switch"
+                aria-checked={on}
+                data-testid="toggle-discoverable"
+                className="w-full flex items-center justify-between gap-4 py-2 text-left"
+            >
+                <span>
+                    <span className="block font-display font-semibold text-sm">Let contacts find me</span>
+                    <span className="block font-body text-xs text-fg/50">
+                        People who have your number saved can see which events you&apos;re going to. Off by default.
+                    </span>
+                </span>
+                <span className={`relative w-11 h-6 rounded-full shrink-0 transition ${on ? "bg-brand" : "bg-fg/15"}`}>
+                    <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${on ? "left-[22px]" : "left-0.5"}`} />
+                </span>
+            </button>
+        </div>
     );
 }
 
