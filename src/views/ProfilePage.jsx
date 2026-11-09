@@ -6,7 +6,7 @@ import { useNav } from "@/lib/useNav";
 import { toast } from "sonner";
 import {
     Camera, Copy, Instagram, Loader2, Check, RotateCw, LogOut, KeyRound, Bell,
-    ChevronRight, Eye, EyeOff, Pencil, Settings, ArrowLeft,
+    ChevronRight, Eye, EyeOff, Pencil, Settings, ArrowLeft, Sun, Moon, Monitor, Clock,
 } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import QRCode from "@/components/QRCode";
@@ -15,6 +15,7 @@ import { Btn, Field, inputCls } from "@/components/PanelUI";
 import { api, formatErr } from "@/lib/api";
 import { CITIES } from "@/lib/geo";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/lib/useTheme";
 
 const errText = (e) => formatErr(e?.response?.data?.detail) || e?.message || "Something went wrong";
 const cityName = (slug) => CITIES.find((c) => c.slug === slug)?.name || "";
@@ -82,7 +83,7 @@ export default function ProfilePage() {
     if (loading || !user || !profile) {
         return (
             <AppShell>
-                <div className="p-10 text-white/60 font-body">Loading…</div>
+                <div className="p-10 text-fg/60 font-body">Loading…</div>
             </AppShell>
         );
     }
@@ -102,7 +103,7 @@ export default function ProfilePage() {
                             aria-label="Settings"
                             title="Settings"
                             data-testid="open-settings"
-                            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+                            className="w-10 h-10 rounded-full border border-fg/10 bg-fg/5 hover:bg-fg/10 flex items-center justify-center transition"
                         >
                             <Settings className="w-4 h-4" />
                         </button>
@@ -113,7 +114,7 @@ export default function ProfilePage() {
                     <MemberCard profile={profile} busy={busy} onPhoto={onPhoto} copyId={copyId} />
                     <div className="space-y-6 min-w-0">
                         <QuickLinks />
-                        <p className="font-body text-xs text-white/40">
+                        <p className="font-body text-xs text-fg/40">
                             Photos are JPG, PNG or WebP, up to 2 MB. Your full ID number is never shown; only the last digits.
                         </p>
                     </div>
@@ -156,17 +157,17 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
                     >
                         {/* FRONT */}
                         <div
-                            className="holo-border absolute inset-0 rounded-[28px] p-[2px] cursor-pointer shadow-[0_25px_60px_-20px_rgba(168,85,247,0.7)]"
+                            className="holo-border absolute inset-0 rounded-[28px] p-[2px] cursor-pointer shadow-[0_25px_60px_-20px_rgba(0,0,0,0.55)]"
                             style={face}
                             onClick={() => setFlipped(true)}
                             aria-hidden={flipped}
                         >
-                            <div className="relative h-full w-full rounded-[26px] overflow-hidden bg-[#120a22]">
+                            <div className="on-media relative h-full w-full rounded-[26px] overflow-hidden bg-[#171513]">
                                 {profile.photo_top ? (
                                     <img src={profile.photo_top} alt="" className="absolute inset-0 w-full h-full object-cover" />
                                 ) : (
-                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/60 via-purple-700/60 to-fuchsia-600/60 flex items-center justify-center">
-                                        <span className="font-display font-bold text-[140px] text-white/25 leading-none">
+                                    <div className="absolute inset-0 bg-brand flex items-center justify-center">
+                                        <span className="font-display font-bold text-[140px] text-fg/25 leading-none">
                                             {profile.name?.[0]?.toUpperCase()}
                                         </span>
                                     </div>
@@ -176,11 +177,11 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
 
                                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-display font-bold text-sm">B</div>
+                                        <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center font-display font-bold text-sm">B</div>
                                         <span className="font-display text-lg tracking-tight">Bash</span>
                                     </div>
                                     <div className="flex items-center gap-2" onClick={stop}>
-                                        <span className="rounded-full bg-white/15 backdrop-blur px-3 py-1 font-body text-[10px] uppercase tracking-[0.2em]" data-testid="profile-tier">
+                                        <span className="rounded-full bg-fg/15 backdrop-blur px-3 py-1 font-body text-[10px] uppercase tracking-[0.2em]" data-testid="profile-tier">
                                             {tier}
                                         </span>
                                         <PhotoButton busy={busy === "top"} onFile={(f) => onPhoto("top", f)} label="Change cover photo" testid="photo-top" />
@@ -192,18 +193,18 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
                                         <div className="font-display text-3xl font-bold leading-tight break-words" data-testid="profile-name">
                                             {profile.name}
                                         </div>
-                                        <div className="font-mono text-sm tracking-widest text-white/80 mt-1" data-testid="profile-bash-id">
+                                        <div className="font-mono text-sm tracking-widest text-fg/80 mt-1" data-testid="profile-bash-id">
                                             {profile.bash_id}
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 flex-wrap">
                                         {profile.city && (
-                                            <span className="rounded-full bg-white/15 backdrop-blur px-3 py-1 font-body text-xs">
+                                            <span className="rounded-full bg-fg/15 backdrop-blur px-3 py-1 font-body text-xs">
                                                 {cityName(profile.city)}
                                             </span>
                                         )}
                                         {profile.instagram && (
-                                            <span className="rounded-full bg-white/15 backdrop-blur px-3 py-1 font-body text-xs">
+                                            <span className="rounded-full bg-fg/15 backdrop-blur px-3 py-1 font-body text-xs">
                                                 @{profile.instagram}
                                             </span>
                                         )}
@@ -214,9 +215,9 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
                                             [profile.stats.events, "Events"],
                                             [profile.stats.attended, "Check-ins"],
                                         ].map(([n, l]) => (
-                                            <div key={l} className="rounded-xl bg-black/35 backdrop-blur border border-white/10 py-2 text-center">
+                                            <div key={l} className="rounded-xl bg-black/35 backdrop-blur border border-fg/10 py-2 text-center">
                                                 <div className="font-display text-xl font-bold leading-none">{n}</div>
-                                                <div className="font-body text-[9px] uppercase tracking-widest text-white/60 mt-1">{l}</div>
+                                                <div className="font-body text-[9px] uppercase tracking-widest text-fg/60 mt-1">{l}</div>
                                             </div>
                                         ))}
                                     </div>
@@ -226,23 +227,23 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
 
                         {/* BACK */}
                         <div
-                            className="holo-border absolute inset-0 rounded-[28px] p-[2px] cursor-pointer shadow-[0_25px_60px_-20px_rgba(79,139,255,0.7)]"
+                            className="holo-border absolute inset-0 rounded-[28px] p-[2px] cursor-pointer shadow-[0_25px_60px_-20px_rgba(0,0,0,0.55)]"
                             style={{ ...face, transform: "rotateY(180deg)" }}
                             onClick={() => setFlipped(false)}
                             aria-hidden={!flipped}
                         >
-                            <div className="relative h-full w-full rounded-[26px] overflow-hidden bg-gradient-to-b from-[#1a1038] via-[#0f1226] to-[#0b0f19] flex flex-col">
+                            <div className="on-media relative h-full w-full rounded-[26px] overflow-hidden bg-[#171513] flex flex-col">
                                 <div className="holo-foil absolute inset-0 pointer-events-none opacity-60" />
 
                                 <div className="relative h-[24%] shrink-0">
                                     {profile.photo_side ? (
                                         <img src={profile.photo_side} alt="" className="absolute inset-0 w-full h-full object-cover" />
                                     ) : (
-                                        <div className="absolute inset-0 bg-gradient-to-r from-purple-700/50 to-blue-600/50 flex items-center justify-center font-body text-xs text-white/60">
+                                        <div className="absolute inset-0 bg-brand flex items-center justify-center font-body text-xs text-brand-fg/60">
                                             Add a second photo
                                         </div>
                                     )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f1226] to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#121110] to-transparent" />
                                     <div className="absolute top-3 right-3" onClick={stop}>
                                         <PhotoButton busy={busy === "side"} onFile={(f) => onPhoto("side", f)} label="Change second photo" testid="photo-side" />
                                     </div>
@@ -259,7 +260,7 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
                                             copyId();
                                         }}
                                         aria-label="Copy Bash ID"
-                                        className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 px-4 py-1.5 font-mono text-sm tracking-widest transition shrink-0"
+                                        className="inline-flex items-center gap-2 rounded-full bg-fg/10 hover:bg-fg/20 px-4 py-1.5 font-mono text-sm tracking-widest transition shrink-0"
                                     >
                                         {profile.bash_id} <Copy className="w-3.5 h-3.5" />
                                     </button>
@@ -280,7 +281,7 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
                                                     rel="noopener noreferrer"
                                                     onClick={stop}
                                                     data-testid="instagram-link"
-                                                    className="inline-flex items-center gap-1.5 text-fuchsia-300 hover:text-fuchsia-200"
+                                                    className="inline-flex items-center gap-1.5 text-brand-ink hover:text-brand-ink"
                                                 >
                                                     <Instagram className="w-3.5 h-3.5" /> @{profile.instagram}
                                                 </a>
@@ -306,8 +307,8 @@ function MemberCard({ profile, busy, onPhoto, copyId }) {
 function Info({ label, children, full, ...rest }) {
     return (
         <div className={full ? "col-span-2" : ""}>
-            <dt className="font-body text-[9px] uppercase tracking-widest text-white/45">{label}</dt>
-            <dd className="font-body text-[13px] text-white/90 break-all leading-snug" {...rest}>
+            <dt className="font-body text-[9px] uppercase tracking-widest text-fg/45">{label}</dt>
+            <dd className="font-body text-[13px] text-fg/90 break-all leading-snug" {...rest}>
                 {children}
             </dd>
         </div>
@@ -347,14 +348,14 @@ function QuickLinks() {
         ["/", "Live Now", "Find something happening tonight"],
     ];
     return (
-        <div className="rounded-3xl border border-white/10 bg-white/5 divide-y divide-white/10">
+        <div className="rounded-3xl border border-fg/10 bg-fg/5 divide-y divide-fg/10">
             {links.map(([href, title, sub]) => (
-                <Link key={href} href={href} className="flex items-center justify-between gap-3 px-5 py-4 hover:bg-white/5 transition">
+                <Link key={href} href={href} className="flex items-center justify-between gap-3 px-5 py-4 hover:bg-fg/5 transition">
                     <div>
                         <div className="font-display font-semibold">{title}</div>
-                        <div className="font-body text-xs text-white/50">{sub}</div>
+                        <div className="font-body text-xs text-fg/50">{sub}</div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-white/40" />
+                    <ChevronRight className="w-4 h-4 text-fg/40" />
                 </Link>
             ))}
         </div>
@@ -411,9 +412,9 @@ function EditProfileModal({ open, onClose, profile, setProfile }) {
                 </Field>
                 <Field label="City">
                     <select value={v.city} onChange={set("city")} className={inputCls} data-testid="edit-city">
-                        <option value="" className="text-black">Select city</option>
+                        <option value="" className="text-canvas">Select city</option>
                         {CITIES.map((c) => (
-                            <option key={c.slug} value={c.slug} className="text-black">{c.name}</option>
+                            <option key={c.slug} value={c.slug} className="text-canvas">{c.name}</option>
                         ))}
                     </select>
                 </Field>
@@ -460,18 +461,20 @@ function SettingsModal({ open, onClose, email, onLogout }) {
 
     return (
         <Modal open={open} onClose={onClose} title="Settings" subtitle={email}>
-            <div className="divide-y divide-white/10" data-testid="settings-menu">
+            <div className="divide-y divide-fg/10" data-testid="settings-menu">
+                <Appearance />
+
                 <button
                     type="button"
                     onClick={() => setView("password")}
                     data-testid="edit-password"
-                    className="w-full flex items-center justify-between gap-3 py-3.5 text-left hover:bg-white/5 -mx-2 px-2 rounded-xl transition"
+                    className="w-full flex items-center justify-between gap-3 py-3.5 text-left hover:text-brand-ink transition"
                 >
                     <span className="flex items-center gap-3">
-                        <KeyRound className="w-4 h-4 text-white/50" />
+                        <KeyRound className="w-4 h-4 text-fg/50" />
                         <span className="font-display font-semibold text-sm">Change password</span>
                     </span>
-                    <ChevronRight className="w-4 h-4 text-white/40" />
+                    <ChevronRight className="w-4 h-4 text-fg/40" />
                 </button>
 
                 <Preferences />
@@ -479,7 +482,7 @@ function SettingsModal({ open, onClose, email, onLogout }) {
                 <button
                     type="button"
                     onClick={() => setView("logout")}
-                    className="w-full flex items-center gap-3 py-3.5 text-left text-red-300 hover:bg-red-500/10 -mx-2 px-2 rounded-xl transition"
+                    className="w-full flex items-center gap-3 py-3.5 text-left text-danger-ink hover:opacity-80 transition"
                 >
                     <LogOut className="w-4 h-4" />
                     <span className="font-display font-semibold text-sm">Log out</span>
@@ -489,6 +492,47 @@ function SettingsModal({ open, onClose, email, onLogout }) {
                 <Btn type="button" onClick={onClose} data-testid="close-settings">Close</Btn>
             </div>
         </Modal>
+    );
+}
+
+const THEME_OPTIONS = [
+    ["light", "Light", Sun, "Always light"],
+    ["dark", "Dark", Moon, "Always dark"],
+    ["system", "Device", Monitor, "Match your phone or computer"],
+    ["time", "Time of day", Clock, "Light 6 am to 6 pm, dark at night"],
+];
+
+function Appearance() {
+    const { mode, theme, setMode } = useTheme();
+    const hint = THEME_OPTIONS.find(([k]) => k === mode)?.[3];
+    return (
+        <div className="py-3.5" data-testid="appearance">
+            <div className="font-body text-[11px] uppercase tracking-widest text-fg/45 mb-2">Appearance</div>
+            <div role="radiogroup" aria-label="Appearance" className="grid grid-cols-4 gap-2">
+                {THEME_OPTIONS.map(([key, label, Icon]) => {
+                    const on = mode === key;
+                    return (
+                        <button
+                            key={key}
+                            type="button"
+                            role="radio"
+                            aria-checked={on}
+                            onClick={() => setMode(key)}
+                            data-testid={`theme-${key}`}
+                            className={`flex flex-col items-center gap-1.5 rounded-xl border px-1 py-2.5 font-body text-[11px] transition ${
+                                on ? "border-brand bg-brand/10 text-fg" : "border-fg/10 bg-fg/5 text-fg/70 hover:bg-fg/10"
+                            }`}
+                        >
+                            <Icon className={`w-4 h-4 ${on ? "text-brand-ink" : ""}`} />
+                            {label}
+                        </button>
+                    );
+                })}
+            </div>
+            <p className="font-body text-xs text-fg/50 mt-2">
+                {hint}. Showing {theme} now.
+            </p>
+        </div>
     );
 }
 
@@ -522,7 +566,7 @@ function PasswordView({ open, onBack, onClose }) {
                 <Field label="New password">
                     <input type={show ? "text" : "password"} value={next} onChange={(e) => setNext(e.target.value)} className={inputCls} autoComplete="new-password" placeholder="8+ characters" />
                 </Field>
-                <button type="button" onClick={() => setShow((x) => !x)} className="inline-flex items-center gap-1.5 font-body text-xs text-white/60 hover:text-white">
+                <button type="button" onClick={() => setShow((x) => !x)} className="inline-flex items-center gap-1.5 font-body text-xs text-fg/60 hover:text-fg">
                     {show ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />} {show ? "Hide" : "Show"} passwords
                 </button>
                 <div className="flex justify-end gap-2 pt-1">
@@ -557,7 +601,7 @@ function Preferences() {
 
     return (
         <div className="py-2" data-testid="prefs">
-            <div className="font-body text-[11px] uppercase tracking-widest text-white/45 pt-2 pb-1">Notifications (this device)</div>
+            <div className="font-body text-[11px] uppercase tracking-widest text-fg/45 pt-2 pb-1">Notifications (this device)</div>
             {PREFS.map(([k, title, sub]) => (
                 <button
                     key={k}
@@ -565,16 +609,16 @@ function Preferences() {
                     onClick={() => toggle(k)}
                     role="switch"
                     aria-checked={prefs[k]}
-                    className="w-full flex items-center justify-between gap-4 rounded-xl px-2 py-2.5 -mx-2 text-left hover:bg-white/5 transition"
+                    className="w-full flex items-center justify-between gap-4 rounded-xl px-2 py-2.5 -mx-2 text-left hover:bg-fg/5 transition"
                 >
                     <span className="flex items-start gap-3 min-w-0">
-                        <Bell className="w-4 h-4 mt-1 text-white/40 shrink-0" />
+                        <Bell className="w-4 h-4 mt-1 text-fg/40 shrink-0" />
                         <span>
                             <span className="block font-display font-semibold text-sm">{title}</span>
-                            <span className="block font-body text-xs text-white/50">{sub}</span>
+                            <span className="block font-body text-xs text-fg/50">{sub}</span>
                         </span>
                     </span>
-                    <span className={`relative w-11 h-6 rounded-full shrink-0 transition ${prefs[k] ? "bg-fuchsia-500" : "bg-white/15"}`}>
+                    <span className={`relative w-11 h-6 rounded-full shrink-0 transition ${prefs[k] ? "bg-brand" : "bg-fg/15"}`}>
                         <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${prefs[k] ? "left-[22px]" : "left-0.5"}`} />
                     </span>
                 </button>

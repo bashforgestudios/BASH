@@ -65,7 +65,7 @@ export default function MyTicketsPage() {
                     <button
                         onClick={() => nav(-1)}
                         data-testid="tickets-back-btn"
-                        className="md:hidden w-10 h-10 rounded-full bg-white/5 flex items-center justify-center"
+                        className="md:hidden w-10 h-10 rounded-full bg-fg/5 flex items-center justify-center"
                     >
                         <ArrowLeft className="w-4 h-4" />
                     </button>
@@ -74,15 +74,15 @@ export default function MyTicketsPage() {
                     </h1>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl bg-white/5 border border-white/10 px-5 py-3.5 mb-6">
+                <div className="flex items-center justify-between rounded-2xl bg-fg/5 border border-fg/10 px-5 py-3.5 mb-6">
                     <div className="flex gap-4 font-body text-sm">
                         <button
                             data-testid="filter-upcoming"
                             onClick={() => setFilter("upcoming")}
                             className={
                                 filter === "upcoming"
-                                    ? "text-white font-semibold"
-                                    : "text-white/50"
+                                    ? "text-fg font-semibold"
+                                    : "text-fg/50"
                             }
                         >
                             Upcoming Events
@@ -92,25 +92,25 @@ export default function MyTicketsPage() {
                             onClick={() => setFilter("all")}
                             className={
                                 filter === "all"
-                                    ? "text-white font-semibold"
-                                    : "text-white/50"
+                                    ? "text-fg font-semibold"
+                                    : "text-fg/50"
                             }
                         >
                             All
                         </button>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-white/40" />
+                    <ChevronRight className="w-4 h-4 text-fg/40" />
                 </div>
 
                 {loading ? (
-                    <div className="text-white/50 font-body">Loading…</div>
+                    <div className="text-fg/50 font-body">Loading…</div>
                 ) : filtered.length === 0 ? (
                     <div
-                        className="text-center py-20 text-white/50 font-body"
+                        className="text-center py-20 text-fg/50 font-body"
                         data-testid="no-tickets-msg"
                     >
                         No tickets yet.{" "}
-                        <Link href="/" className="text-purple-400 underline">
+                        <Link href="/" className="text-brand-ink underline">
                             Browse events
                         </Link>
                     </div>
@@ -149,7 +149,7 @@ function TicketStub({ ticket, index, highlighted, onShare, onCal }) {
                 <button
                     data-testid={`add-cal-${ticket.id}`}
                     onClick={onCal}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 px-4 py-3.5 font-body text-sm hover:bg-white/10 transition"
+                    className="flex items-center justify-center gap-2 rounded-2xl bg-fg/5 border border-fg/10 px-4 py-3.5 font-body text-sm hover:bg-fg/10 transition"
                 >
                     <CalendarPlus className="w-4 h-4" /> Add to Calendar
                 </button>
@@ -157,7 +157,7 @@ function TicketStub({ ticket, index, highlighted, onShare, onCal }) {
                     data-testid={`share-ticket-${ticket.id}`}
                     onClick={onShare}
                     disabled={!canShare}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 px-4 py-3.5 font-body text-sm hover:bg-white/10 transition disabled:opacity-40 disabled:hover:bg-white/5"
+                    className="flex items-center justify-center gap-2 rounded-2xl bg-fg/5 border border-fg/10 px-4 py-3.5 font-body text-sm hover:bg-fg/10 transition disabled:opacity-40 disabled:hover:bg-fg/5"
                 >
                     <Share2 className="w-4 h-4" /> Share
                 </button>

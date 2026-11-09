@@ -3,22 +3,64 @@
 @tailwind utilities;
 
 :root {
-    --bg: #0b0f19;
-    --surface: #111827;
-    --surface-2: #1a2235;
-    --surface-hover: #1f2937;
-    --text-primary: #f9fafb;
-    --text-secondary: #9ca3af;
+    /* ---- Palette: "Ember". Channels are "R G B" so Tailwind can add opacity. ---- */
+    /* DARK (default) */
+    --canvas: 15 14 13; /* warm near-black */
+    --surface: 24 22 20; /* popups and drawers */
+    --fg: 244 239 232; /* warm off-white, not pure white */
+
+    --brand: 255 90 54; /* ember: fills (buttons, active chips) */
+    --brand-ink: 255 128 98; /* ember as text on the canvas */
+    --brand-fg: 20 17 15; /* text on a brand fill */
+
+    --danger: 229 72 77;
+    --danger-ink: 255 149 146;
+    --success: 48 164 108;
+    --success-ink: 125 219 168;
+    --warning: 224 161 0;
+    --warning-ink: 245 196 81;
+
     --live: #ff3b30;
-    --accent-blue: #4f8bff;
-    --accent-purple: #a855f7;
-    --border: rgba(255, 255, 255, 0.08);
+    color-scheme: dark;
+}
+
+/* LIGHT: warm paper and ink */
+[data-theme="light"] {
+    --canvas: 246 242 234;
+    --surface: 255 255 255;
+    --fg: 22 18 14;
+
+    --brand: 232 67 31;
+    --brand-ink: 194 49 15;
+    --brand-fg: 22 18 14;
+
+    --danger: 217 45 32;
+    --danger-ink: 180 35 24;
+    --success: 24 135 84;
+    --success-ink: 21 112 70;
+    --warning: 202 133 4;
+    --warning-ink: 138 90 0;
+    color-scheme: light;
+}
+
+/* Optional accent swaps (set <html data-accent="volt"> or "cobalt"). Nothing else changes. */
+[data-accent="volt"] { --brand: 200 241 105; --brand-ink: 200 241 105; --brand-fg: 18 20 10; }
+[data-accent="volt"][data-theme="light"] { --brand: 160 205 40; --brand-ink: 84 112 8; --brand-fg: 18 20 10; }
+[data-accent="cobalt"] { --brand: 79 110 255; --brand-ink: 140 160 255; --brand-fg: 255 255 255; }
+[data-accent="cobalt"][data-theme="light"] { --brand: 47 77 232; --brand-ink: 40 64 200; --brand-fg: 255 255 255; }
+
+/* Content that sits on photos (event cards, hero, member card, scanner) is always light-on-dark,
+   whichever theme is active. Put .on-media on the container. */
+.on-media {
+    --fg: 246 242 234;
+    --canvas: 15 14 13;
+    color: rgb(246 242 234);
 }
 
 html,
 body {
-    background: var(--bg);
-    color: var(--text-primary);
+    background: rgb(var(--canvas));
+    color: rgb(var(--fg));
     min-height: 100%;
 }
 
@@ -27,18 +69,6 @@ body {
     font-family: "Manrope", "General Sans", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background:
-        radial-gradient(
-            ellipse 1200px 600px at 10% -20%,
-            rgba(79, 139, 255, 0.08),
-            transparent 60%
-        ),
-        radial-gradient(
-            ellipse 1000px 500px at 110% 30%,
-            rgba(168, 85, 247, 0.1),
-            transparent 60%
-        ),
-        var(--bg);
 }
 
 .font-display {
@@ -59,7 +89,7 @@ body {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(var(--fg) / 0.14);
     border-radius: 4px;
 }
 
@@ -129,12 +159,12 @@ body {
 .barcode {
     background-image: repeating-linear-gradient(
         to right,
-        #0b0f19 0,
-        #0b0f19 2px,
+        #16120e 0,
+        #16120e 2px,
         transparent 2px,
         transparent 4px,
-        #0b0f19 4px,
-        #0b0f19 7px,
+        #16120e 4px,
+        #16120e 7px,
         transparent 7px,
         transparent 9px
     );
@@ -145,19 +175,22 @@ body {
     position: relative;
     border-radius: 48px;
     padding: 14px;
-    background: linear-gradient(
-        140deg,
-        rgba(255, 255, 255, 0.08),
-        rgba(255, 255, 255, 0.02)
-    );
+    background: rgb(var(--fg) / 0.05);
     box-shadow:
-        0 30px 80px -20px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+        0 30px 80px -20px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgb(var(--fg) / 0.08);
+}
+
+@layer components {
+    /* anything filled with the brand colour reads dark-on-ember; explicit text-* utilities still win */
+    .bg-brand {
+        color: rgb(var(--brand-fg));
+    }
 }
 
 @layer base {
     * {
-        border-color: var(--border);
+        border-color: rgb(var(--fg) / 0.1);
     }
 }
 
@@ -211,29 +244,14 @@ html {
     mask-composite: intersect;
 }
 
-/* ---------- Profile: holographic member card ---------- */
+/* ---------- Profile: member card ---------- */
+/* Flat brand-colour edge and a soft sheen that follows the pointer; no rainbow foil. */
 .holo-border {
     --mx: 50%;
     --my: 50%;
-    background:
-        conic-gradient(
-            from calc(var(--mx) * 3.6) at var(--mx) var(--my),
-            #4f8bff, #a855f7, #ff4fd8, #ffd36e, #5ef2c2, #4f8bff
-        );
+    background: rgb(var(--brand));
 }
 .holo-foil {
-    mix-blend-mode: color-dodge;
-    opacity: 0.35;
-    background:
-        radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.55), transparent 45%),
-        repeating-linear-gradient(
-            115deg,
-            rgba(79, 139, 255, 0.55) 0%,
-            rgba(168, 85, 247, 0.55) 12%,
-            rgba(255, 79, 216, 0.55) 24%,
-            rgba(94, 242, 194, 0.45) 36%,
-            rgba(79, 139, 255, 0.55) 48%
-        );
-    background-size: 100% 100%, 250% 250%;
-    background-position: 0 0, var(--mx, 50%) var(--my, 50%);
+    opacity: 0.5;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.14), transparent 55%);
 }

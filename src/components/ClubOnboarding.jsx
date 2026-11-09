@@ -30,14 +30,14 @@ export function Drawer({ title, onClose, children }) {
             <div
                 onClick={(e) => e.stopPropagation()}
                 data-testid="onboarding-drawer"
-                className="w-full max-w-2xl h-full overflow-y-auto bg-[#0b0f19] border-l border-white/10 p-6 space-y-5"
+                className="w-full max-w-2xl h-full overflow-y-auto bg-canvas border-l border-fg/10 p-6 space-y-5"
             >
                 <div className="flex items-center justify-between">
                     <h3 className="font-display text-xl font-bold">{title}</h3>
                     <button
                         onClick={onClose}
                         aria-label="Close"
-                        className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center"
+                        className="w-10 h-10 rounded-full bg-fg/5 hover:bg-fg/10 flex items-center justify-center"
                     >
                         <X className="w-4 h-4" />
                     </button>
@@ -84,7 +84,7 @@ export default function ClubOnboarding({ onChanged }) {
                 }
             >
                 {loading ? (
-                    <div className="text-white/50 font-body text-sm">Loading…</div>
+                    <div className="text-fg/50 font-body text-sm">Loading…</div>
                 ) : apps.length === 0 ? (
                     <Empty>No applications yet. Click New application to onboard a club.</Empty>
                 ) : (
@@ -95,11 +95,11 @@ export default function ClubOnboarding({ onChanged }) {
                                 type="button"
                                 onClick={() => setReviewId(a.club_id)}
                                 data-testid={`application-${a.club_id}`}
-                                className="w-full text-left rounded-xl border border-white/10 p-3 hover:bg-white/5 flex flex-col md:flex-row md:items-center justify-between gap-2"
+                                className="w-full text-left rounded-xl border border-fg/10 p-3 hover:bg-fg/5 flex flex-col md:flex-row md:items-center justify-between gap-2"
                             >
                                 <div>
                                     <div className="font-body font-semibold">{a.trade_name}</div>
-                                    <div className="font-body text-xs text-white/50">
+                                    <div className="font-body text-xs text-fg/50">
                                         {a.city_name} · capacity {a.capacity ?? "—"} · documents {a.docs_approved}/{a.docs_required} approved
                                     </div>
                                 </div>
@@ -164,18 +164,18 @@ function ApplicationForm({ clubId, initial, onSaved }) {
         } else if (f.type === "select") {
             input = (
                 <select {...common}>
-                    <option value="" className="bg-[#0b0f19]">Choose…</option>
+                    <option value="" className="bg-canvas">Choose…</option>
                     {f.options.map((o) => (
-                        <option key={o} value={o} className="bg-[#0b0f19]">{o}</option>
+                        <option key={o} value={o} className="bg-canvas">{o}</option>
                     ))}
                 </select>
             );
         } else if (f.type === "city") {
             input = (
                 <select {...common}>
-                    <option value="" className="bg-[#0b0f19]">Choose…</option>
+                    <option value="" className="bg-canvas">Choose…</option>
                     {CITIES.map((c) => (
-                        <option key={c.slug} value={c.slug} className="bg-[#0b0f19]">{c.name}</option>
+                        <option key={c.slug} value={c.slug} className="bg-canvas">{c.name}</option>
                     ))}
                 </select>
             );
@@ -203,7 +203,7 @@ function ApplicationForm({ clubId, initial, onSaved }) {
             ))}
 
             {errors.length > 0 && (
-                <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 font-body text-sm text-red-200 space-y-1" data-testid="application-errors">
+                <div className="rounded-2xl border border-danger/30 bg-danger/10 p-4 font-body text-sm text-danger-ink space-y-1" data-testid="application-errors">
                     {errors.map((m, i) => (
                         <div key={i}>• {m}</div>
                     ))}
@@ -278,7 +278,7 @@ export function ReviewDrawer({ clubId, onClose, onChanged }) {
     if (!d) {
         return (
             <Drawer title="Application" onClose={onClose}>
-                <div className="text-white/50 font-body text-sm">Loading…</div>
+                <div className="text-fg/50 font-body text-sm">Loading…</div>
             </Drawer>
         );
     }
@@ -309,29 +309,29 @@ export function ReviewDrawer({ clubId, onClose, onChanged }) {
             </div>
 
             {d.reviewer_note && d.status === "rejected" && (
-                <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-3 font-body text-sm text-red-200">
+                <div className="rounded-xl border border-danger/30 bg-danger/10 p-3 font-body text-sm text-danger-ink">
                     Rejected: {d.reviewer_note}
                 </div>
             )}
 
             <Card title="Approval">
                 {locked ? (
-                    <p className="font-body text-sm text-white/70">
+                    <p className="font-body text-sm text-fg/70">
                         Approved. The club is live and its admin can create events. Reopen it to change anything.
                     </p>
                 ) : (
                     <>
                         {d.blockers.length > 0 ? (
-                            <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3 mb-4" data-testid="blockers">
-                                <div className="font-body text-sm font-semibold text-amber-200 mb-2">Not ready yet:</div>
-                                <ul className="font-body text-sm text-amber-100 space-y-1">
+                            <div className="rounded-xl border border-warning/30 bg-warning/10 p-3 mb-4" data-testid="blockers">
+                                <div className="font-body text-sm font-semibold text-warning-ink mb-2">Not ready yet:</div>
+                                <ul className="font-body text-sm text-warning-ink space-y-1">
                                     {d.blockers.map((b, i) => (
                                         <li key={i}>• {b}</li>
                                     ))}
                                 </ul>
                             </div>
                         ) : (
-                            <p className="font-body text-sm text-emerald-200 mb-4">All documents are approved and licences are valid.</p>
+                            <p className="font-body text-sm text-success-ink mb-4">All documents are approved and licences are valid.</p>
                         )}
                         <div className="flex flex-wrap gap-2">
                             <Btn variant="good" disabled={busy || !d.can_approve} onClick={() => run(() => api.post(`/dev/applications/${clubId}/decision`, { action: "approve" }), "Club approved and live")} data-testid="approve-club">
@@ -371,17 +371,17 @@ export function ReviewDrawer({ clubId, onClose, onChanged }) {
                         const doc = d.documents.find((x) => x.kind === t.kind);
                         const expiry = t.expiry ? d.application[t.expiry] : "";
                         return (
-                            <div key={t.kind} className="rounded-xl border border-white/10 p-3 space-y-2" data-testid={`doc-${t.kind}`}>
+                            <div key={t.kind} className="rounded-xl border border-fg/10 p-3 space-y-2" data-testid={`doc-${t.kind}`}>
                                 <div className="flex items-center justify-between gap-2 flex-wrap">
                                     <div className="font-body text-sm font-semibold">
                                         {t.label}{" "}
-                                        {t.req ? <span className="text-red-300">*</span> : <span className="text-white/40 text-xs">(optional)</span>}
+                                        {t.req ? <span className="text-danger-ink">*</span> : <span className="text-fg/40 text-xs">(optional)</span>}
                                     </div>
                                     {doc ? <Badge tone={DOC_TONE[doc.status]}>{DOC_LABEL[doc.status]}</Badge> : <Badge>Not uploaded</Badge>}
                                 </div>
-                                {expiry && <div className="font-body text-xs text-white/50">Expires {expiry}</div>}
-                                {doc && <div className="font-body text-xs text-white/50 truncate">{doc.file_name}</div>}
-                                {doc?.reviewer_note && <div className="font-body text-xs text-red-200">Reason: {doc.reviewer_note}</div>}
+                                {expiry && <div className="font-body text-xs text-fg/50">Expires {expiry}</div>}
+                                {doc && <div className="font-body text-xs text-fg/50 truncate">{doc.file_name}</div>}
+                                {doc?.reviewer_note && <div className="font-body text-xs text-danger-ink">Reason: {doc.reviewer_note}</div>}
                                 <div className="flex flex-wrap gap-2">
                                     {doc && (
                                         <Btn onClick={() => view(doc.id)}>
@@ -389,7 +389,7 @@ export function ReviewDrawer({ clubId, onClose, onChanged }) {
                                         </Btn>
                                     )}
                                     {!locked && (
-                                        <label className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-white/5 border border-white/10 hover:bg-white/10 cursor-pointer">
+                                        <label className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-fg/5 border border-fg/10 hover:bg-fg/10 cursor-pointer">
                                             <Upload className="w-4 h-4" /> {doc ? "Replace" : "Upload"}
                                             <input
                                                 type="file"
@@ -439,19 +439,19 @@ export function ReviewDrawer({ clubId, onClose, onChanged }) {
                     </Btn>
                 }
             >
-                {locked && <p className="font-body text-xs text-white/50 mb-3">Reopen the club to edit details.</p>}
+                {locked && <p className="font-body text-xs text-fg/50 mb-3">Reopen the club to edit details.</p>}
                 <div className="space-y-4">
                     {FIELD_GROUPS.map((g) => {
                         const rows = g.fields.filter((f) => d.application[f.key]);
                         if (!rows.length) return null;
                         return (
                             <div key={g.id}>
-                                <div className="font-body text-[11px] uppercase tracking-widest text-white/40 mb-1">{g.title}</div>
+                                <div className="font-body text-[11px] uppercase tracking-widest text-fg/40 mb-1">{g.title}</div>
                                 <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 font-body text-sm">
                                     {rows.map((f) => (
                                         <div key={f.key}>
-                                            <dt className="text-[11px] text-white/40">{f.label}</dt>
-                                            <dd className="text-white/90 break-words">{d.application[f.key]}</dd>
+                                            <dt className="text-[11px] text-fg/40">{f.label}</dt>
+                                            <dd className="text-fg/90 break-words">{d.application[f.key]}</dd>
                                         </div>
                                     ))}
                                 </dl>

@@ -38,19 +38,19 @@ export default function Modal({ open, title, subtitle, onClose, children, busy =
                 role="dialog"
                 aria-modal="true"
                 aria-label={title}
-                className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl border border-white/10 bg-[#0e0b1a] p-5 md:p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+                className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl border border-fg/10 bg-surface p-5 md:p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
             >
                 <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
                         <h2 className="font-display text-xl font-semibold">{title}</h2>
-                        {subtitle && <p className="font-body text-xs text-white/50 mt-1">{subtitle}</p>}
+                        {subtitle && <p className="font-body text-xs text-fg/50 mt-1">{subtitle}</p>}
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
                         disabled={busy}
                         aria-label="Close"
-                        className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center shrink-0"
+                        className="w-8 h-8 rounded-full bg-fg/5 hover:bg-fg/10 flex items-center justify-center shrink-0"
                     >
                         <X className="w-4 h-4" />
                     </button>

@@ -10,13 +10,13 @@ export default function LocationChip({ className = "" }) {
     const name = CITIES.find((c) => c.slug === slug)?.name || "Pune";
 
     return (
-        <div className={`flex items-center gap-2 text-xs font-body text-white/60 ${className}`}>
+        <div className={`flex items-center gap-2 text-xs font-body text-fg/60 ${className}`}>
             <button
                 type="button"
                 onClick={requestLocation}
                 data-testid="location-chip"
                 title="Use my current location"
-                className="flex items-center gap-1.5 hover:text-white transition"
+                className="flex items-center gap-1.5 hover:text-fg transition"
             >
                 {status === "asking" ? (
                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -25,15 +25,15 @@ export default function LocationChip({ className = "" }) {
                 )}
                 <span data-testid="location-city">{name}</span>
             </button>
-            {status === "denied" && <span className="text-white/40">· location off</span>}
+            {status === "denied" && <span className="text-fg/40">· location off</span>}
             <select
                 value={slug}
                 onChange={(e) => setCity(e.target.value)}
                 aria-label="Choose city"
-                className="bg-transparent text-white/50 outline-none cursor-pointer"
+                className="bg-transparent text-fg/50 outline-none cursor-pointer"
             >
                 {CITIES.map((c) => (
-                    <option key={c.slug} value={c.slug} className="bg-[#0b0f19]">
+                    <option key={c.slug} value={c.slug} className="bg-canvas">
                         {c.name}
                     </option>
                 ))}

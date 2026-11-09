@@ -80,7 +80,32 @@ Quotas: each ticket category has a quota. The quotas of all published events on 
 `/profile` shows the flip member card (photos, Bash ID, QR code, details on the back) and quick links.
 
 - **Edit profile** opens one popup with name, mobile, city and Instagram, with Cancel and Save. Email and date of birth are locked.
-- The **gear icon** opens Settings: change password (other devices are signed out), notification switches (stored on this device) and log out with a confirmation step.
+- The **gear icon** opens Settings: Appearance (see below), change password (other devices are signed out), notification switches (stored on this device) and log out with a confirmation step.
+
+## Appearance and colours
+
+Settings → Appearance has four options, saved on the device:
+
+| Option | Behaviour |
+| --- | --- |
+| Light / Dark | Always that theme |
+| Device | Follows the phone or computer's own appearance setting, live (operating systems can switch it at sunset or on a schedule) |
+| Time of day | Light from 6 am to 6 pm by the device clock, dark otherwise (`DAY_START` / `NIGHT_START` in `src/lib/theme.js`) |
+
+The default is Device. A small script in `<head>` sets the theme before the first paint, so there is no flash of the wrong theme, and the browser's status-bar colour follows it.
+
+**How colours work.** Components never hard-code colours. `src/app/globals.css` defines the palette as CSS variables (dark in `:root`, light in `[data-theme="light"]`), and `tailwind.config.js` exposes them as utilities:
+
+| Utility | Meaning |
+| --- | --- |
+| `bg-canvas`, `bg-surface` | Page background, popups and drawers |
+| `text-fg`, `bg-fg/5`, `border-fg/10` | Text and subtle tints (these flip between themes) |
+| `bg-brand`, `text-brand-ink`, `text-brand-fg` | Accent fill, accent as text, text on an accent fill |
+| `danger`, `success`, `warning` (+ `-ink` for text) | Status colours |
+
+Put `.on-media` on any container that sits on a photo (event cards, hero, member card, scanner) so its text stays light in both themes. Printed-style tickets and QR codes stay on paper colours in both themes.
+
+**Changing the accent.** The default palette is "Ember" (vermilion on warm black and paper). To try another, edit the `--brand*` values in `globals.css`, or set `data-accent="volt"` (acid lime) or `data-accent="cobalt"` (flat blue) on `<html>`. Nothing else needs to change.
 
 ## Location
 

@@ -107,7 +107,7 @@ export default function TicketCard({ ticket, highlighted = false }) {
             <div
                 data-testid={`ticket-card-${ticket.id}`}
                 className="relative"
-                style={highlighted ? { filter: "drop-shadow(0 0 14px rgba(168,85,247,0.65))" } : undefined}
+                style={highlighted ? { filter: "drop-shadow(0 0 14px rgba(255,90,54,0.55))" } : undefined}
             >
                 <div className="ticket-top overflow-hidden rounded-t-[28px] bg-white">
                     <div className="relative h-52 md:h-60">

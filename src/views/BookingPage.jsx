@@ -82,7 +82,7 @@ export default function BookingPage() {
     if (!event)
         return (
             <AppShell hideBottomNav>
-                <div className="p-10 text-white/60">Loading…</div>
+                <div className="p-10 text-fg/60">Loading…</div>
             </AppShell>
         );
     const tier = event.tiers.find(
@@ -180,7 +180,7 @@ export default function BookingPage() {
                 <button
                     onClick={() => (step === 0 ? nav(-1) : setStep(step - 1))}
                     data-testid="booking-back-btn"
-                    className="flex items-center gap-2 text-white/60 hover:text-white mb-6 font-body text-sm"
+                    className="flex items-center gap-2 text-fg/60 hover:text-fg mb-6 font-body text-sm"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back
                 </button>
@@ -196,21 +196,21 @@ export default function BookingPage() {
                                 data-testid={`step-indicator-${i}`}
                                 className={`w-8 h-8 rounded-full flex items-center justify-center font-display text-sm font-bold ${
                                     i < step
-                                        ? "bg-gradient-to-br from-blue-500 to-purple-600"
+                                        ? "bg-brand"
                                         : i === step
-                                          ? "bg-white text-black"
-                                          : "bg-white/10 text-white/40"
+                                          ? "bg-fg text-canvas"
+                                          : "bg-fg/10 text-fg/40"
                                 }`}
                             >
                                 {i < step ? <Check className="w-4 h-4" /> : i + 1}
                             </div>
                             <span
-                                className={`font-body text-xs md:text-sm ${i === step ? "text-white" : "text-white/40"}`}
+                                className={`font-body text-xs md:text-sm ${i === step ? "text-fg" : "text-fg/40"}`}
                             >
                                 {s}
                             </span>
                             {i < STEPS.length - 1 && (
-                                <div className="flex-1 h-px bg-white/10 mx-2" />
+                                <div className="flex-1 h-px bg-fg/10 mx-2" />
                             )}
                         </div>
                     ))}
@@ -222,7 +222,7 @@ export default function BookingPage() {
                 {BOOKING_NOTE[bookingType] && (
                     <div
                         data-testid="booking-type-note"
-                        className="rounded-2xl bg-purple-500/10 border border-purple-400/20 p-4 mb-6 font-body text-sm text-white/80"
+                        className="rounded-2xl bg-brand/10 border border-brand/20 p-4 mb-6 font-body text-sm text-fg/80"
                     >
                         {BOOKING_NOTE[bookingType]}
                     </div>
@@ -268,7 +268,7 @@ export default function BookingPage() {
                                 }
                             />
                             <div>
-                                <label className="block text-xs text-white/50 font-body mb-1.5">
+                                <label className="block text-xs text-fg/50 font-body mb-1.5">
                                     Quantity
                                 </label>
                                 <div className="flex items-center gap-3">
@@ -281,8 +281,8 @@ export default function BookingPage() {
                                             }
                                             className={`w-12 h-12 rounded-xl font-display font-bold ${
                                                 form.quantity === q
-                                                    ? "bg-white text-black"
-                                                    : "bg-white/5 text-white border border-white/10"
+                                                    ? "bg-fg text-canvas"
+                                                    : "bg-fg/5 text-fg border border-fg/10"
                                             }`}
                                         >
                                             {q}
@@ -301,13 +301,13 @@ export default function BookingPage() {
                             exit={{ opacity: 0, x: -12 }}
                             className="space-y-4"
                         >
-                            <div className="flex items-start gap-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 p-4">
-                                <Shield className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                            <div className="flex items-start gap-3 rounded-2xl bg-brand/10 border border-brand/20 p-4">
+                                <Shield className="w-5 h-5 text-brand-ink shrink-0 mt-0.5" />
                                 <div>
                                     <div className="font-display font-semibold">
                                         ID Verification
                                     </div>
-                                    <p className="text-xs text-white/70 font-body mt-1">
+                                    <p className="text-xs text-fg/70 font-body mt-1">
                                         Required by venue entry. Your ID stays
                                         encrypted — only the last 4 digits are
                                         stored.
@@ -316,7 +316,7 @@ export default function BookingPage() {
                             </div>
 
                             <div>
-                                <label className="block text-xs text-white/50 font-body mb-1.5">
+                                <label className="block text-xs text-fg/50 font-body mb-1.5">
                                     ID Type
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
@@ -333,8 +333,8 @@ export default function BookingPage() {
                                             }
                                             className={`py-3 rounded-xl font-body text-sm ${
                                                 form.id_type === t
-                                                    ? "bg-white text-black"
-                                                    : "bg-white/5 text-white border border-white/10"
+                                                    ? "bg-fg text-canvas"
+                                                    : "bg-fg/5 text-fg border border-fg/10"
                                             }`}
                                         >
                                             {t}
@@ -360,7 +360,7 @@ export default function BookingPage() {
                             />
                             {needsPhoto && (
                                 <div data-testid="id-photo-block">
-                                    <label className="block text-xs text-white/50 font-body mb-1.5">
+                                    <label className="block text-xs text-fg/50 font-body mb-1.5">
                                         Photo of your ID (required for this booking)
                                     </label>
                                     <input
@@ -368,10 +368,10 @@ export default function BookingPage() {
                                         accept="image/jpeg,image/png,image/webp"
                                         data-testid="id-photo"
                                         onChange={(e) => onPhoto(e.target.files?.[0])}
-                                        className="w-full text-sm font-body text-white/70 file:mr-3 file:rounded-full file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-white"
+                                        className="w-full text-sm font-body text-fg/70 file:mr-3 file:rounded-full file:border-0 file:bg-fg/10 file:px-4 file:py-2 file:text-fg"
                                     />
-                                    {photoErr && <p className="text-xs text-red-400 font-body mt-2">{photoErr}</p>}
-                                    <p className="text-[11px] text-white/40 font-body mt-2">
+                                    {photoErr && <p className="text-xs text-danger-ink font-body mt-2">{photoErr}</p>}
+                                    <p className="text-[11px] text-fg/40 font-body mt-2">
                                         The club deletes this photo as soon as it approves or rejects your booking.
                                     </p>
                                 </div>
@@ -390,7 +390,7 @@ export default function BookingPage() {
                             <h2 className="font-display text-2xl font-semibold">
                                 Payment
                             </h2>
-                            <p className="font-body text-sm text-white/60">
+                            <p className="font-body text-sm text-fg/60">
                                 Choose how you&apos;d like to pay. Powered by
                                 Razorpay (demo).
                             </p>
@@ -428,7 +428,7 @@ export default function BookingPage() {
                 {err && (
                     <div
                         data-testid="booking-error"
-                        className="mt-4 text-sm text-red-400 font-body"
+                        className="mt-4 text-sm text-danger-ink font-body"
                     >
                         {err}
                     </div>
@@ -440,7 +440,7 @@ export default function BookingPage() {
                             onClick={next}
                             disabled={loading}
                             data-testid="booking-next-btn"
-                            className="flex-1 rounded-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 font-display font-semibold hover:scale-[1.01] transition disabled:opacity-50"
+                            className="flex-1 rounded-full py-4 bg-brand font-display font-semibold hover:scale-[1.01] transition disabled:opacity-50"
                         >
                             {loading ? (
                                 <Loader2 className="w-5 h-5 animate-spin mx-auto" />
@@ -454,7 +454,7 @@ export default function BookingPage() {
                             onClick={pay}
                             disabled={loading}
                             data-testid="pay-now-btn"
-                            className="flex-1 rounded-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 font-display font-semibold hover:scale-[1.01] transition"
+                            className="flex-1 rounded-full py-4 bg-brand font-display font-semibold hover:scale-[1.01] transition"
                         >
                             Pay {inr(amount)}
                         </button>
@@ -476,52 +476,52 @@ export default function BookingPage() {
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 40, opacity: 0 }}
-                            className="w-full max-w-md bg-[#0f1420] rounded-3xl p-6 border border-white/10 relative"
+                            className="w-full max-w-md bg-surface rounded-3xl p-6 border border-fg/10 relative"
                         >
                             <div className="flex items-center justify-between mb-5">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-9 h-9 rounded-lg bg-[#0a2540] flex items-center justify-center font-display font-bold text-white">
+                                    <div className="w-9 h-9 rounded-lg bg-[#0a2540] flex items-center justify-center font-display font-bold text-fg">
                                         R
                                     </div>
                                     <div>
                                         <div className="font-display font-semibold">
                                             Razorpay
                                         </div>
-                                        <div className="text-[10px] text-white/40 font-body">
+                                        <div className="text-[10px] text-fg/40 font-body">
                                             SECURED CHECKOUT · DEMO
                                         </div>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setShowPay(false)}
-                                    className="text-white/50 text-sm font-body"
+                                    className="text-fg/50 text-sm font-body"
                                     data-testid="rzp-close"
                                 >
                                     Cancel
                                 </button>
                             </div>
 
-                            <div className="rounded-2xl bg-white/5 p-4 mb-4">
-                                <div className="text-xs text-white/50 font-body">
+                            <div className="rounded-2xl bg-fg/5 p-4 mb-4">
+                                <div className="text-xs text-fg/50 font-body">
                                     Amount payable
                                 </div>
                                 <div className="font-display text-4xl font-bold">
                                     {inr(amount)}
                                 </div>
-                                <div className="text-xs text-white/50 font-body mt-1">
+                                <div className="text-xs text-fg/50 font-body mt-1">
                                     {event.artist} · {tier?.name} × {form.quantity}
                                 </div>
                             </div>
 
                             {payMethod === "upi" && (
                                 <div className="space-y-2 mb-4">
-                                    <label className="text-xs text-white/60 font-body">
+                                    <label className="text-xs text-fg/60 font-body">
                                         UPI ID
                                     </label>
                                     <input
                                         defaultValue="demo@okaxis"
                                         data-testid="rzp-upi"
-                                        className="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-3 font-body text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+                                        className="w-full rounded-xl bg-fg/5 border border-fg/10 px-3 py-3 font-body text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
                                     />
                                 </div>
                             )}
@@ -530,16 +530,16 @@ export default function BookingPage() {
                                     <input
                                         defaultValue="4111 1111 1111 1111"
                                         data-testid="rzp-card"
-                                        className="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-3 font-body text-sm"
+                                        className="w-full rounded-xl bg-fg/5 border border-fg/10 px-3 py-3 font-body text-sm"
                                     />
                                     <div className="grid grid-cols-2 gap-2">
                                         <input
                                             defaultValue="12/28"
-                                            className="rounded-xl bg-white/5 border border-white/10 px-3 py-3 font-body text-sm"
+                                            className="rounded-xl bg-fg/5 border border-fg/10 px-3 py-3 font-body text-sm"
                                         />
                                         <input
                                             defaultValue="123"
-                                            className="rounded-xl bg-white/5 border border-white/10 px-3 py-3 font-body text-sm"
+                                            className="rounded-xl bg-fg/5 border border-fg/10 px-3 py-3 font-body text-sm"
                                         />
                                     </div>
                                 </div>
@@ -548,7 +548,7 @@ export default function BookingPage() {
                                 <div className="mb-4">
                                     <select
                                         data-testid="rzp-bank"
-                                        className="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-3 font-body text-sm"
+                                        className="w-full rounded-xl bg-fg/5 border border-fg/10 px-3 py-3 font-body text-sm"
                                     >
                                         <option>HDFC Bank</option>
                                         <option>ICICI Bank</option>
@@ -562,7 +562,7 @@ export default function BookingPage() {
                                 onClick={confirmPay}
                                 disabled={loading}
                                 data-testid="rzp-confirm"
-                                className="w-full rounded-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 font-display font-semibold disabled:opacity-50"
+                                className="w-full rounded-full py-4 bg-brand font-display font-semibold disabled:opacity-50"
                             >
                                 {loading ? (
                                     <Loader2 className="w-5 h-5 animate-spin mx-auto" />
@@ -571,7 +571,7 @@ export default function BookingPage() {
                                 )}
                             </button>
 
-                            <p className="text-[10px] text-white/40 text-center mt-3 font-body">
+                            <p className="text-[10px] text-fg/40 text-center mt-3 font-body">
                                 This is a demo. No real money is charged.
                             </p>
                         </motion.div>
@@ -585,7 +585,7 @@ export default function BookingPage() {
 function Input({ label, value, onChange, testid, type = "text", placeholder }) {
     return (
         <div>
-            <label className="block text-xs text-white/50 font-body mb-1.5">
+            <label className="block text-xs text-fg/50 font-body mb-1.5">
                 {label}
             </label>
             <input
@@ -594,7 +594,7 @@ function Input({ label, value, onChange, testid, type = "text", placeholder }) {
                 value={value}
                 placeholder={placeholder}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 font-body text-sm placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                className="w-full rounded-xl bg-fg/5 border border-fg/10 px-4 py-3 font-body text-sm placeholder:text-fg/30 focus:outline-none focus:ring-2 focus:ring-brand/50"
             />
         </div>
     );
@@ -607,19 +607,19 @@ function PayOption({ icon, label, sub, active, onClick, testid }) {
             onClick={onClick}
             className={`w-full rounded-2xl p-4 flex items-center gap-4 border transition ${
                 active
-                    ? "border-purple-400 bg-gradient-to-r from-blue-500/15 to-purple-600/15"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                    ? "border-brand bg-brand"
+                    : "border-fg/10 bg-fg/5 hover:bg-fg/10"
             }`}
         >
-            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-fg/5 flex items-center justify-center">
                 {icon}
             </div>
             <div className="flex-1 text-left">
                 <div className="font-display font-semibold">{label}</div>
-                <div className="text-xs text-white/50 font-body">{sub}</div>
+                <div className="text-xs text-fg/50 font-body">{sub}</div>
             </div>
             <div
-                className={`w-5 h-5 rounded-full border-2 ${active ? "border-purple-400 bg-purple-400" : "border-white/30"}`}
+                className={`w-5 h-5 rounded-full border-2 ${active ? "border-brand bg-brand" : "border-fg/30"}`}
             />
         </button>
     );
@@ -629,20 +629,20 @@ function MiniTicket({ event, tier, quantity, amount }) {
     return (
         <div
             data-testid="booking-mini-ticket"
-            className="mini-ticket mb-6 flex overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-purple-900/30"
+            className="mini-ticket mb-6 flex overflow-hidden rounded-2xl bg-brand shadow-lg shadow-brand/30"
         >
             <img src={event.image} alt={event.title} className="w-24 shrink-0 object-cover" />
-            <div className="min-w-0 flex-1 p-4 text-white">
+            <div className="min-w-0 flex-1 p-4 text-brand-fg">
                 <div className="truncate font-display text-base font-bold leading-tight">{event.artist || event.title}</div>
-                <div className="mt-1 truncate text-xs font-body text-white/80">{event.venue}</div>
-                <div className="mt-0.5 text-xs font-body text-white/80">
+                <div className="mt-1 truncate text-xs font-body text-brand-fg/80">{event.venue}</div>
+                <div className="mt-0.5 text-xs font-body text-brand-fg/80">
                     {event.date}
                     {event.time ? ` · ${event.time}` : ""}
                 </div>
             </div>
-            <div className="flex w-28 shrink-0 flex-col items-end justify-center border-l-2 border-dashed border-white/40 px-4 text-right text-white">
-                <div className="text-[10px] uppercase tracking-widest text-white/70 font-body">{tier?.name}</div>
-                <div className="text-[11px] font-body text-white/80">× {quantity}</div>
+            <div className="flex w-28 shrink-0 flex-col items-end justify-center border-l-2 border-dashed border-brand-fg/40 px-4 text-right text-brand-fg">
+                <div className="text-[10px] uppercase tracking-widest text-brand-fg/70 font-body">{tier?.name}</div>
+                <div className="text-[11px] font-body text-brand-fg/80">× {quantity}</div>
                 <div className="mt-1 font-display text-xl font-bold">{inr(amount)}</div>
             </div>
         </div>
@@ -671,24 +671,24 @@ function Confirmation({ booking, nav }) {
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-[36px] bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-600 p-5 pb-7 shadow-2xl shadow-purple-900/40"
+                    className="rounded-[36px] bg-brand p-5 pb-7 shadow-2xl shadow-brand/40"
                 >
-                    <div className="mb-4 flex items-center gap-3 px-1 text-white">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20">
+                    <div className="mb-4 flex items-center gap-3 px-1 text-brand-fg">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-fg/15">
                             <Icon className="h-5 w-5" />
                         </div>
                         <div>
                             <h1 className="font-display text-2xl font-bold leading-tight">{copy.title}</h1>
-                            <p className="mt-0.5 text-xs text-white/80 font-body">{copy.text}</p>
+                            <p className="mt-0.5 text-xs text-brand-fg/80 font-body">{copy.text}</p>
                         </div>
                     </div>
 
                     <TicketCard ticket={booking} />
 
                     <div className="mt-5 flex justify-center gap-1.5" aria-hidden="true">
-                        <span className="h-1.5 w-6 rounded-full bg-white" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+                        <span className="h-1.5 w-6 rounded-full bg-brand-fg" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-brand-fg/40" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-brand-fg/40" />
                     </div>
                 </motion.div>
 
@@ -696,13 +696,13 @@ function Confirmation({ booking, nav }) {
                     <button
                         onClick={() => nav(`/tickets?new=${booking.id}`)}
                         data-testid="view-my-tickets"
-                        className="rounded-full bg-gradient-to-r from-blue-500 to-purple-600 py-4 font-display font-semibold"
+                        className="rounded-full bg-brand py-4 font-display font-semibold"
                     >
                         View my tickets
                     </button>
                     <button
                         onClick={() => nav("/")}
-                        className="rounded-full border border-white/15 bg-white/5 py-4 font-display font-semibold hover:bg-white/10"
+                        className="rounded-full border border-fg/15 bg-fg/5 py-4 font-display font-semibold hover:bg-fg/10"
                     >
                         Browse events
                     </button>

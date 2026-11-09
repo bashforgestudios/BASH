@@ -51,7 +51,7 @@ export default function LeadsInbox() {
                             key={id}
                             type="button"
                             onClick={() => setFilter(id)}
-                            className={`rounded-full px-3.5 py-1.5 font-body text-xs border transition ${filter === id ? "bg-white text-black border-white" : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"}`}
+                            className={`rounded-full px-3.5 py-1.5 font-body text-xs border transition ${filter === id ? "bg-fg text-canvas border-fg" : "bg-fg/5 text-fg/70 border-fg/10 hover:bg-fg/10"}`}
                         >
                             {label}
                             {id !== "all" && count(id) > 0 && <span className="ml-1.5 opacity-60">{count(id)}</span>}
@@ -60,7 +60,7 @@ export default function LeadsInbox() {
                 </div>
 
                 {loading ? (
-                    <div className="text-white/50 font-body text-sm">Loading…</div>
+                    <div className="text-fg/50 font-body text-sm">Loading…</div>
                 ) : shown.length === 0 ? (
                     <Empty>No leads here. Share bash.in/business with clubs you want on the platform.</Empty>
                 ) : (
@@ -74,20 +74,20 @@ export default function LeadsInbox() {
 
             {creds && (
                 <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-5" onClick={() => setCreds(null)}>
-                    <div onClick={(e) => e.stopPropagation()} data-testid="creds-modal" className="w-full max-w-md rounded-3xl bg-[#0b0f19] border border-white/10 p-6 space-y-4">
+                    <div onClick={(e) => e.stopPropagation()} data-testid="creds-modal" className="w-full max-w-md rounded-3xl bg-canvas border border-fg/10 p-6 space-y-4">
                         <h3 className="font-display text-xl font-bold">Onboarding started</h3>
-                        <p className="font-body text-sm text-white/60">
+                        <p className="font-body text-sm text-fg/60">
                             The club is hidden until you approve it. A club login now exists for the lead&apos;s email.
                         </p>
-                        <div className="rounded-xl bg-white/5 border border-white/10 p-4 font-body text-sm space-y-2">
-                            <div><span className="text-white/40 text-xs block">Login email</span>{creds.admin_email}</div>
+                        <div className="rounded-xl bg-fg/5 border border-fg/10 p-4 font-body text-sm space-y-2">
+                            <div><span className="text-fg/40 text-xs block">Login email</span>{creds.admin_email}</div>
                             {creds.temp_password ? (
                                 <div>
-                                    <span className="text-white/40 text-xs block">Temporary password (shown once)</span>
+                                    <span className="text-fg/40 text-xs block">Temporary password (shown once)</span>
                                     <span className="font-mono text-base" data-testid="temp-password">{creds.temp_password}</span>
                                 </div>
                             ) : (
-                                <div className="text-white/60">This email already had a guest account. It now has club access with its existing password.</div>
+                                <div className="text-fg/60">This email already had a guest account. It now has club access with its existing password.</div>
                             )}
                         </div>
                         <div className="flex flex-wrap gap-2">
@@ -135,31 +135,31 @@ function LeadRow({ lead: l, onChanged, onOpen, onStarted }) {
     };
 
     return (
-        <div className="rounded-2xl border border-white/10 p-4 space-y-3" data-testid={`lead-${l.id}`}>
+        <div className="rounded-2xl border border-fg/10 p-4 space-y-3" data-testid={`lead-${l.id}`}>
             <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                     <div className="font-body font-semibold">{l.club_name}</div>
-                    <div className="font-body text-xs text-white/50">
+                    <div className="font-body text-xs text-fg/50">
                         {l.city_name} · {l.contact_name} · wants: {pref} · {fmtDateTime(l.created_at)}
                     </div>
                 </div>
                 <Badge tone={st.tone}>{st.label}</Badge>
             </div>
 
-            {l.message && <p className="font-body text-sm text-white/70 bg-white/5 rounded-xl p-3">{l.message}</p>}
+            {l.message && <p className="font-body text-sm text-fg/70 bg-fg/5 rounded-xl p-3">{l.message}</p>}
 
             <div className="flex flex-wrap gap-2">
-                <a className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-white/5 border border-white/10 hover:bg-white/10" href={`tel:${l.phone}`}>
+                <a className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-fg/5 border border-fg/10 hover:bg-fg/10" href={`tel:${l.phone}`}>
                     <Phone className="w-4 h-4" /> {l.phone}
                 </a>
-                <a className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-white/5 border border-white/10 hover:bg-white/10" href={wa(l.phone)} target="_blank" rel="noreferrer">
+                <a className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-fg/5 border border-fg/10 hover:bg-fg/10" href={wa(l.phone)} target="_blank" rel="noreferrer">
                     <MessageCircle className="w-4 h-4" /> WhatsApp
                 </a>
-                <a className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-white/5 border border-white/10 hover:bg-white/10" href={`mailto:${l.email}`}>
+                <a className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm bg-fg/5 border border-fg/10 hover:bg-fg/10" href={`mailto:${l.email}`}>
                     <Mail className="w-4 h-4" /> {l.email}
                 </a>
                 {l.instagram && (
-                    <a className="inline-flex items-center rounded-full px-4 py-2 font-body text-sm bg-white/5 border border-white/10 hover:bg-white/10" href={`https://instagram.com/${encodeURIComponent(l.instagram)}`} target="_blank" rel="noreferrer">
+                    <a className="inline-flex items-center rounded-full px-4 py-2 font-body text-sm bg-fg/5 border border-fg/10 hover:bg-fg/10" href={`https://instagram.com/${encodeURIComponent(l.instagram)}`} target="_blank" rel="noreferrer">
                         @{l.instagram}
                     </a>
                 )}

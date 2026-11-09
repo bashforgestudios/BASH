@@ -16,7 +16,7 @@ export default function EventCard({ event, index = 0 }) {
         >
             <Link
                 href={`/events/${event.id}`}
-                className="block relative rounded-3xl overflow-hidden h-[420px] sm:h-[460px] group"
+                className="on-media bg-[#171513] block relative rounded-3xl overflow-hidden h-[420px] sm:h-[460px] group"
             >
                 <img
                     decoding="async"
@@ -29,14 +29,14 @@ export default function EventCard({ event, index = 0 }) {
 
                 {/* Top row */}
                 <div className="relative z-10 flex items-start justify-between p-5">
-                    <div className="rounded-full bg-black/50 backdrop-blur-md border border-white/10 px-3 py-1.5 flex items-center gap-3 text-xs font-body">
+                    <div className="rounded-full bg-black/50 backdrop-blur-md border border-fg/10 px-3 py-1.5 flex items-center gap-3 text-xs font-body">
                         <span className="flex items-center gap-1.5">
-                            <MapPin className="w-3.5 h-3.5 text-white/70" />
+                            <MapPin className="w-3.5 h-3.5 text-fg/70" />
                             {event.city}
                         </span>
-                        <span className="text-white/30">·</span>
+                        <span className="text-fg/30">·</span>
                         <span className="flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5 text-white/70" />
+                            <Calendar className="w-3.5 h-3.5 text-fg/70" />
                             {event.date.split(" ").slice(0, 2).join(" ")}
                         </span>
                     </div>
@@ -49,10 +49,10 @@ export default function EventCard({ event, index = 0 }) {
                 </div>
 
                 <div className="absolute inset-x-5 bottom-5 z-10">
-                    <h3 className="font-display text-4xl sm:text-5xl font-bold text-white leading-none">
+                    <h3 className="font-display text-4xl sm:text-5xl font-bold text-fg leading-none">
                         {event.artist}
                     </h3>
-                    <p className="font-body text-sm text-white/70 mt-1">
+                    <p className="font-body text-sm text-fg/70 mt-1">
                         {event.subtitle}
                     </p>
 
@@ -62,17 +62,17 @@ export default function EventCard({ event, index = 0 }) {
                                 <Heart className="w-4 h-4 text-[#ff3b30] fill-[#ff3b30]" />
                             </IconBtn>
                             <IconBtn testid={`chat-${event.id}`}>
-                                <MessageCircle className="w-4 h-4 text-white/80" />
+                                <MessageCircle className="w-4 h-4 text-fg/80" />
                             </IconBtn>
                             <IconBtn testid={`share-${event.id}`}>
-                                <Send className="w-4 h-4 text-white/80" />
+                                <Send className="w-4 h-4 text-fg/80" />
                             </IconBtn>
                         </div>
-                        <div className="rounded-full bg-white/10 backdrop-blur-md border border-white/10 px-5 py-2.5">
-                            <span className="font-body text-xs text-white/60">
+                        <div className="rounded-full bg-fg/10 backdrop-blur-md border border-fg/10 px-5 py-2.5">
+                            <span className="font-body text-xs text-fg/60">
                                 From{" "}
                             </span>
-                            <span className="font-display font-bold text-lg text-white">
+                            <span className="font-display font-bold text-lg text-fg">
                                 {inr(event.tiers[0].price)}
                             </span>
                         </div>
@@ -88,7 +88,7 @@ function IconBtn({ children, testid }) {
         <button
             data-testid={testid}
             onClick={(e) => e.preventDefault()}
-            className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-black/70 transition"
+            className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-fg/10 flex items-center justify-center hover:bg-black/70 transition"
         >
             {children}
         </button>

@@ -3,8 +3,10 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
+import { useTheme } from "@/lib/useTheme";
 
 export default function Providers({ children }) {
+    const { theme } = useTheme();
     const [queryClient] = useState(
         () =>
             new QueryClient({
@@ -18,7 +20,7 @@ export default function Providers({ children }) {
             <div className="App">
                 <AuthProvider>
                     {children}
-                    <Toaster theme="dark" position="top-right" />
+                    <Toaster theme={theme} position="top-right" />
                 </AuthProvider>
             </div>
         </QueryClientProvider>

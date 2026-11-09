@@ -48,7 +48,7 @@ export default function EventDetailPage() {
     if (loading)
         return (
             <AppShell>
-                <div className="p-10 text-white/60">Loading…</div>
+                <div className="p-10 text-fg/60">Loading…</div>
             </AppShell>
         );
     if (!event)
@@ -62,19 +62,19 @@ export default function EventDetailPage() {
         <AppShell hideBottomNav>
             <div className="max-w-5xl mx-auto">
                 {/* Hero */}
-                <div className="relative h-[55vh] md:h-[70vh] overflow-hidden md:rounded-b-[48px]">
+                <div className="on-media bg-[#171513] relative h-[55vh] md:h-[70vh] overflow-hidden md:rounded-b-[48px]">
                     <img
                         src={event.hero_image || event.image}
                         alt={event.title}
                         className="absolute inset-0 w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#0b0f19]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/5 to-black/85" />
 
                     <div className="relative z-10 flex items-start justify-between p-5 md:p-8">
                         <button
                             onClick={() => nav(-1)}
                             data-testid="back-btn"
-                            className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-black/70"
+                            className="w-11 h-11 rounded-full bg-black/50 backdrop-blur-md border border-fg/10 flex items-center justify-center hover:bg-black/70"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </button>
@@ -94,7 +94,7 @@ export default function EventDetailPage() {
                         >
                             {event.artist}
                         </motion.h1>
-                        <p className="font-body text-base md:text-lg text-white/70 mt-1">
+                        <p className="font-body text-base md:text-lg text-fg/70 mt-1">
                             {event.subtitle}
                         </p>
                     </div>
@@ -103,7 +103,7 @@ export default function EventDetailPage() {
                 {/* Content */}
                 <div className="px-5 md:px-8 pb-28 md:pb-10 pt-6">
                     {/* Tier selector */}
-                    <h3 className="font-display text-sm uppercase tracking-widest text-white/50 mb-3">
+                    <h3 className="font-display text-sm uppercase tracking-widest text-fg/50 mb-3">
                         Choose your tier
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
@@ -114,8 +114,8 @@ export default function EventDetailPage() {
                                 onClick={() => setTier(t)}
                                 className={`text-left rounded-2xl p-4 border transition ${
                                     tier?.name === t.name
-                                        ? "border-purple-400 bg-gradient-to-br from-blue-500/20 to-purple-600/20"
-                                        : "border-white/10 bg-white/5 hover:bg-white/10"
+                                        ? "border-brand bg-brand"
+                                        : "border-fg/10 bg-fg/5 hover:bg-fg/10"
                                 }`}
                             >
                                 <div className="flex items-center justify-between">
@@ -126,7 +126,7 @@ export default function EventDetailPage() {
                                         {inr(t.price)}
                                     </span>
                                 </div>
-                                <div className="text-xs text-white/60 font-body mt-1">
+                                <div className="text-xs text-fg/60 font-body mt-1">
                                     {t.note}
                                 </div>
                                 {t.perks?.length > 0 && (
@@ -134,9 +134,9 @@ export default function EventDetailPage() {
                                         {t.perks.map((perk) => (
                                             <li
                                                 key={perk}
-                                                className="flex items-start gap-2 text-xs text-white/70 font-body"
+                                                className="flex items-start gap-2 text-xs text-fg/70 font-body"
                                             >
-                                                <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-purple-300" />
+                                                <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-brand-ink" />
                                                 {perk}
                                             </li>
                                         ))}
@@ -148,40 +148,40 @@ export default function EventDetailPage() {
 
                     {/* Venue chip */}
                     <div className="flex flex-wrap gap-2 mb-6">
-                        <div className="rounded-full bg-white/5 border border-white/10 px-4 py-2 flex items-center gap-2 font-body text-sm">
-                            <MapPin className="w-4 h-4 text-white/60" />
+                        <div className="rounded-full bg-fg/5 border border-fg/10 px-4 py-2 flex items-center gap-2 font-body text-sm">
+                            <MapPin className="w-4 h-4 text-fg/60" />
                             {event.venue}, {event.city}
                         </div>
-                        <div className="rounded-full bg-white/5 border border-white/10 px-4 py-2 flex items-center gap-2 font-body text-sm">
-                            <Calendar className="w-4 h-4 text-white/60" />
+                        <div className="rounded-full bg-fg/5 border border-fg/10 px-4 py-2 flex items-center gap-2 font-body text-sm">
+                            <Calendar className="w-4 h-4 text-fg/60" />
                             {event.date}
                         </div>
-                        <div className="rounded-full bg-white/5 border border-white/10 px-4 py-2 flex items-center gap-2 font-body text-sm">
-                            <Clock className="w-4 h-4 text-white/60" />
+                        <div className="rounded-full bg-fg/5 border border-fg/10 px-4 py-2 flex items-center gap-2 font-body text-sm">
+                            <Clock className="w-4 h-4 text-fg/60" />
                             {event.time}
                         </div>
                         <QuickInfo event={event} />
                     </div>
 
-                    <p className="font-body text-white/70 leading-relaxed max-w-2xl mb-10">
+                    <p className="font-body text-fg/70 leading-relaxed max-w-2xl mb-10">
                         {event.description}
                     </p>
 
                     <SectionNav event={event} />
 
                     {/* CTAs */}
-                    <div className="fixed md:static bottom-0 left-0 right-0 p-5 md:p-0 bg-[#0b0f19]/95 md:bg-transparent backdrop-blur-xl md:backdrop-blur-0 border-t md:border-0 border-white/5 flex gap-3 z-30">
+                    <div className="fixed md:static bottom-0 left-0 right-0 p-5 md:p-0 bg-canvas/95 md:bg-transparent backdrop-blur-xl md:backdrop-blur-0 border-t md:border-0 border-fg/5 flex gap-3 z-30">
                         <button
                             onClick={bookNow}
                             data-testid="book-ticket-btn"
-                            className="flex-1 rounded-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 font-display font-semibold text-white hover:scale-[1.01] transition shadow-lg shadow-purple-900/40"
+                            className="flex-1 rounded-full py-4 bg-brand font-display font-semibold text-brand-fg hover:scale-[1.01] transition shadow-lg shadow-brand/40"
                         >
                             Book Ticket · {inr(tier?.price || 0)}
                         </button>
                         <button
                             data-testid="view-seat-map-btn"
                             onClick={() => alert("Seat map coming soon")}
-                            className="rounded-full px-6 border border-white/15 bg-white/5 font-body font-medium hover:bg-white/10 transition"
+                            className="rounded-full px-6 border border-fg/15 bg-fg/5 font-body font-medium hover:bg-fg/10 transition"
                         >
                             View Seat Map
                         </button>

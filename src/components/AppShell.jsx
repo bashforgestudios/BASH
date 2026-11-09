@@ -31,7 +31,7 @@ const ROLE_NAME = {
 };
 
 const activeCls = (isActive) =>
-    isActive ? "text-white" : "hover:text-white transition";
+    isActive ? "text-fg" : "hover:text-fg transition";
 
 export default function AppShell({ children, hideBottomNav = false }) {
     const { user, logout } = useAuth();
@@ -41,10 +41,10 @@ export default function AppShell({ children, hideBottomNav = false }) {
     return (
         <div className="min-h-screen w-full flex flex-col">
             {/* Top bar — only on >= md */}
-            <header className="hidden md:flex items-center justify-between px-10 py-4 border-b border-white/5 sticky top-0 z-40 backdrop-blur-xl bg-[#0b0f19]/70">
+            <header className="hidden md:flex items-center justify-between px-10 py-4 border-b border-fg/5 sticky top-0 z-40 backdrop-blur-xl bg-canvas/70">
                 <div className="flex flex-col">
                     <Link href="/" className="flex items-center gap-2" data-testid="brand-link">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-display text-white font-bold">
+                        <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center font-display text-brand-fg font-bold">
                             B
                         </div>
                         <span className="font-display text-xl tracking-tight">Bash</span>
@@ -53,7 +53,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
                     <LocationChip className="ml-11 -mt-0.5" />
                 </div>
 
-                <nav className="flex items-center gap-8 font-body text-sm text-white/70">
+                <nav className="flex items-center gap-8 font-body text-sm text-fg/70">
                     {links.map((l) => (
                         <NavLink
                             key={l.id}
@@ -70,10 +70,10 @@ export default function AppShell({ children, hideBottomNav = false }) {
                 <div className="flex items-center gap-3">
                     {user ? (
                         <>
-                            <span className="text-sm text-white/70 font-body" data-testid="user-name">
+                            <span className="text-sm text-fg/70 font-body" data-testid="user-name">
                                 Hi, {user.name?.split(" ")[0]}
                                 {ROLE_NAME[user.role] && (
-                                    <span className="ml-2 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                    <span className="ml-2 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-fg/10 text-fg/70">
                                         {ROLE_NAME[user.role]}
                                     </span>
                                 )}
@@ -85,7 +85,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
                                 }}
                                 data-testid="logout-btn"
                                 aria-label="Log out"
-                                className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+                                className="w-10 h-10 rounded-full bg-fg/5 hover:bg-fg/10 flex items-center justify-center transition"
                             >
                                 <LogOut className="w-4 h-4" />
                             </button>
@@ -94,7 +94,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
                         <Link
                             href="/login"
                             data-testid="header-login-btn"
-                            className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-sm font-semibold hover:scale-[1.02] transition"
+                            className="px-5 py-2 rounded-full bg-brand text-sm font-semibold hover:scale-[1.02] transition"
                         >
                             Sign in
                         </Link>
@@ -106,7 +106,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
 
             {/* Mobile bottom nav */}
             {!hideBottomNav && (
-                <nav className="md:hidden sticky bottom-0 z-40 bg-[#0b0f19]/90 backdrop-blur-xl border-t border-white/10 px-4 py-3 flex items-center justify-around">
+                <nav className="md:hidden sticky bottom-0 z-40 bg-canvas/90 backdrop-blur-xl border-t border-fg/10 px-4 py-3 flex items-center justify-around">
                     {links.map((l) => {
                         const Icon = l.icon;
                         return (
@@ -116,7 +116,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
                                 end={l.href === "/"}
                                 data-testid={`mob-nav-${l.id}`}
                                 className={({ isActive }) =>
-                                    `flex flex-col items-center gap-1 text-xs ${isActive ? "text-white" : "text-white/50"}`
+                                    `flex flex-col items-center gap-1 text-xs ${isActive ? "text-fg" : "text-fg/50"}`
                                 }
                             >
                                 <Icon className="w-5 h-5" />
@@ -131,7 +131,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
                                 nav("/");
                             }}
                             data-testid="mob-nav-logout"
-                            className="flex flex-col items-center gap-1 text-xs text-white/50"
+                            className="flex flex-col items-center gap-1 text-xs text-fg/50"
                         >
                             <LogOut className="w-5 h-5" />
                             Log out
@@ -141,7 +141,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
                             href="/login"
                             data-testid="mob-nav-account"
                             className={({ isActive }) =>
-                                `flex flex-col items-center gap-1 text-xs ${isActive ? "text-white" : "text-white/50"}`
+                                `flex flex-col items-center gap-1 text-xs ${isActive ? "text-fg" : "text-fg/50"}`
                             }
                         >
                             <User className="w-5 h-5" />

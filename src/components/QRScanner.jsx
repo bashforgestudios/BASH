@@ -87,7 +87,7 @@ export default function QRScanner({ onCode }) {
     }, []);
 
     return (
-        <div className="relative rounded-3xl overflow-hidden bg-black border border-white/10 aspect-[3/4] md:aspect-video max-h-[70vh] mx-auto w-full">
+        <div className="on-media relative rounded-3xl overflow-hidden bg-black border border-fg/10 aspect-[3/4] md:aspect-video max-h-[70vh] mx-auto w-full">
             <video
                 ref={videoRef}
                 playsInline
@@ -97,9 +97,9 @@ export default function QRScanner({ onCode }) {
                 className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-3/5 aspect-square rounded-2xl border-2 border-white/80 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
+                <div className="w-3/5 aspect-square rounded-2xl border-2 border-fg/80 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
             </div>
-            <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-center font-body text-sm text-white/90">
+            <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-center font-body text-sm text-fg/90">
                 {message}
             </div>
         </div>

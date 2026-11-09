@@ -7,7 +7,7 @@ import { CITIES } from "@/lib/geo";
 import { CONTACT_PREFS, validateLead } from "@/lib/leads";
 
 const input =
-    "w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3.5 font-body text-sm placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500/40";
+    "w-full rounded-xl bg-fg/5 border border-fg/10 px-4 py-3.5 font-body text-sm placeholder:text-fg/30 focus:outline-none focus:ring-2 focus:ring-brand/40";
 
 const PREF_ICON = { call: Phone, whatsapp: MessageCircle, email: Mail };
 
@@ -45,20 +45,20 @@ export default function BusinessLeadForm() {
     if (done) {
         return (
             <div data-testid="lead-success" className="text-center">
-                <div className="w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center mx-auto">
-                    <Check className="w-7 h-7 text-emerald-300" />
+                <div className="w-14 h-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center mx-auto">
+                    <Check className="w-7 h-7 text-success-ink" />
                 </div>
                 <h2 className="font-display text-2xl font-bold mt-5">Request received</h2>
-                <p className="font-body text-white/60 text-sm mt-2">
-                    Thanks {v.contact_name.split(" ")[0]}. The Bash team will reach out about <b className="text-white">{v.club_name}</b>.
+                <p className="font-body text-fg/60 text-sm mt-2">
+                    Thanks {v.contact_name.split(" ")[0]}. The Bash team will reach out about <b className="text-fg">{v.club_name}</b>.
                 </p>
                 <ol className="mt-6 space-y-3 text-left">
                     {STEPS.map((s, i) => (
-                        <li key={i} className="flex gap-3 rounded-xl bg-white/5 border border-white/10 p-3.5">
-                            <s.icon className="w-5 h-5 text-purple-300 shrink-0 mt-0.5" />
+                        <li key={i} className="flex gap-3 rounded-xl bg-fg/5 border border-fg/10 p-3.5">
+                            <s.icon className="w-5 h-5 text-brand-ink shrink-0 mt-0.5" />
                             <div>
                                 <div className="font-body text-sm font-semibold">{s.title}</div>
-                                <div className="font-body text-xs text-white/50 mt-0.5">{s.text}</div>
+                                <div className="font-body text-xs text-fg/50 mt-0.5">{s.text}</div>
                             </div>
                         </li>
                     ))}
@@ -70,10 +70,10 @@ export default function BusinessLeadForm() {
     return (
         <form onSubmit={submit} className="space-y-3" data-testid="lead-form" noValidate>
             <input data-testid="lead-club" placeholder="Club or venue name" value={v.club_name} onChange={set("club_name")} required className={input} />
-            <select data-testid="lead-city" value={v.city_slug} onChange={set("city_slug")} required className={`${input} ${v.city_slug ? "" : "text-white/30"}`}>
-                <option value="" className="bg-[#0b0f19]">City</option>
+            <select data-testid="lead-city" value={v.city_slug} onChange={set("city_slug")} required className={`${input} ${v.city_slug ? "" : "text-fg/30"}`}>
+                <option value="" className="bg-canvas">City</option>
                 {CITIES.map((c) => (
-                    <option key={c.slug} value={c.slug} className="bg-[#0b0f19] text-white">{c.name}</option>
+                    <option key={c.slug} value={c.slug} className="bg-canvas text-fg">{c.name}</option>
                 ))}
             </select>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -84,7 +84,7 @@ export default function BusinessLeadForm() {
             <input data-testid="lead-instagram" placeholder="Instagram handle (optional)" value={v.instagram} onChange={set("instagram")} className={input} />
 
             <div>
-                <div className="font-body text-[11px] uppercase tracking-widest text-white/40 mb-2">Best way to reach you</div>
+                <div className="font-body text-[11px] uppercase tracking-widest text-fg/40 mb-2">Best way to reach you</div>
                 <div className="grid grid-cols-3 gap-2" role="radiogroup">
                     {CONTACT_PREFS.map((p) => {
                         const Icon = PREF_ICON[p.id];
@@ -96,7 +96,7 @@ export default function BusinessLeadForm() {
                                 role="radio"
                                 aria-checked={on}
                                 onClick={() => setV((x) => ({ ...x, contact_pref: p.id }))}
-                                className={`rounded-xl border py-2.5 font-body text-sm flex items-center justify-center gap-2 transition ${on ? "bg-white text-black border-white" : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"}`}
+                                className={`rounded-xl border py-2.5 font-body text-sm flex items-center justify-center gap-2 transition ${on ? "bg-fg text-canvas border-fg" : "bg-fg/5 border-fg/10 text-fg/70 hover:bg-fg/10"}`}
                             >
                                 <Icon className="w-4 h-4" /> {p.label}
                             </button>
@@ -111,17 +111,17 @@ export default function BusinessLeadForm() {
             <input tabIndex={-1} autoComplete="off" aria-hidden="true" name="company_site" value={v.company_site} onChange={set("company_site")} className="hidden" />
 
             {errs.length > 0 && (
-                <div data-testid="lead-error" className="text-sm text-red-400 font-body space-y-0.5">
+                <div data-testid="lead-error" className="text-sm text-danger-ink font-body space-y-0.5">
                     {errs.map((m, i) => (
                         <div key={i}>{m}</div>
                     ))}
                 </div>
             )}
 
-            <button type="submit" disabled={loading} data-testid="lead-submit" className="w-full rounded-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 font-display font-semibold hover:scale-[1.01] transition disabled:opacity-50">
+            <button type="submit" disabled={loading} data-testid="lead-submit" className="w-full rounded-full py-4 bg-brand font-display font-semibold hover:scale-[1.01] transition disabled:opacity-50">
                 {loading ? "Sending…" : "Request access"}
             </button>
-            <p className="font-body text-xs text-white/40 text-center">
+            <p className="font-body text-xs text-fg/40 text-center">
                 No documents needed today. We collect licences and bank details with you on the call.
             </p>
         </form>

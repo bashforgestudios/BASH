@@ -43,14 +43,14 @@ export default function DevPanelPage() {
     if (loading || !user) {
         return (
             <AppShell>
-                <div className="p-10 text-white/60 font-body">Loading…</div>
+                <div className="p-10 text-fg/60 font-body">Loading…</div>
             </AppShell>
         );
     }
     if (user.role !== "developer") {
         return (
             <AppShell>
-                <div className="p-10 text-white/60 font-body">This panel is for developers.</div>
+                <div className="p-10 text-fg/60 font-body">This panel is for developers.</div>
             </AppShell>
         );
     }
@@ -59,7 +59,7 @@ export default function DevPanelPage() {
         <AppShell>
             <div className="max-w-6xl mx-auto px-5 md:px-10 py-8">
                 <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight">Developer Panel</h1>
-                <p className="font-body text-white/50 text-sm mt-1">
+                <p className="font-body text-fg/50 text-sm mt-1">
                     Every club, user, booking and payment gateway in one place.
                 </p>
                 <div className="mt-6">
@@ -90,7 +90,7 @@ function Overview() {
         load();
     }, [load]);
 
-    if (!data) return <div className="text-white/50 font-body">Loading…</div>;
+    if (!data) return <div className="text-fg/50 font-body">Loading…</div>;
 
     const bookingMap = Object.fromEntries(data.bookings.map((b) => [b.status, b]));
     const revenue = data.bookings.reduce((s, b) => (b.status === "approved" ? s + b.amount : s), 0);
@@ -115,7 +115,7 @@ function Overview() {
                     <div className="space-y-2 font-body text-sm">
                         {ROLE_OPTIONS.map((r) => (
                             <div key={r.id} className="flex justify-between">
-                                <span className="text-white/70">{r.label}</span>
+                                <span className="text-fg/70">{r.label}</span>
                                 <span className="font-semibold">{data.roles.find((x) => x.role === r.id)?.n || 0}</span>
                             </div>
                         ))}
@@ -123,10 +123,10 @@ function Overview() {
                 </Card>
                 <Card title="Bookings by status">
                     <div className="space-y-2 font-body text-sm">
-                        {data.bookings.length === 0 && <div className="text-white/50">No bookings yet.</div>}
+                        {data.bookings.length === 0 && <div className="text-fg/50">No bookings yet.</div>}
                         {data.bookings.map((b) => (
                             <div key={b.status} className="flex justify-between">
-                                <span className="text-white/70">{b.status.replace("_", " ")}</span>
+                                <span className="text-fg/70">{b.status.replace("_", " ")}</span>
                                 <span className="font-semibold">{b.n}</span>
                             </div>
                         ))}
@@ -139,8 +139,8 @@ function Overview() {
 
 function Stat({ label, value }) {
     return (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <div className="text-[11px] uppercase tracking-widest text-white/40 font-body">{label}</div>
+        <div className="rounded-2xl border border-fg/10 bg-fg/5 p-4">
+            <div className="text-[11px] uppercase tracking-widest text-fg/40 font-body">{label}</div>
             <div className="font-display text-2xl font-bold mt-2">{value}</div>
         </div>
     );
@@ -187,7 +187,7 @@ function ClubsTab() {
                     <input className={inputCls} placeholder="Club name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                     <select className={inputCls} value={form.city_slug} onChange={(e) => setForm({ ...form, city_slug: e.target.value })}>
                         {CITIES.map((c) => (
-                            <option key={c.slug} value={c.slug} className="bg-[#0b0f19]">{c.name}</option>
+                            <option key={c.slug} value={c.slug} className="bg-canvas">{c.name}</option>
                         ))}
                     </select>
                     <input className={inputCls} placeholder="Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
@@ -199,7 +199,7 @@ function ClubsTab() {
             </Card>
 
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : clubs.length === 0 ? (
                 <Empty>No clubs yet.</Empty>
             ) : (
@@ -228,7 +228,7 @@ function ClubCardDetail({ club: c, onSaved }) {
     };
 
     return (
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-5 space-y-4" data-testid={`dev-club-${c.id}`}>
+        <div className="rounded-3xl border border-fg/10 bg-fg/5 p-5 space-y-4" data-testid={`dev-club-${c.id}`}>
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
                 <div>
                     <div className="flex items-center gap-2">
@@ -239,7 +239,7 @@ function ClubCardDetail({ club: c, onSaved }) {
                             <Badge tone="amber">{c.verification_status === "rejected" ? "Rejected" : "Documents pending"}</Badge>
                         )}
                     </div>
-                    <div className="font-body text-xs text-white/50 mt-1">
+                    <div className="font-body text-xs text-fg/50 mt-1">
                         {c.city} · {c.address}
                     </div>
                 </div>
@@ -264,9 +264,9 @@ function ClubCardDetail({ club: c, onSaved }) {
             </div>
 
             <div className="font-body text-sm">
-                <span className="text-white/40 text-[11px] uppercase tracking-widest mr-2">Staff</span>
+                <span className="text-fg/40 text-[11px] uppercase tracking-widest mr-2">Staff</span>
                 {c.staff.length === 0 ? (
-                    <span className="text-white/50">No club admin or gate accounts linked.</span>
+                    <span className="text-fg/50">No club admin or gate accounts linked.</span>
                 ) : (
                     c.staff.map((s) => (
                         <Badge key={s.id} tone={s.role === "club_admin" ? "blue" : "grey"}>
@@ -281,9 +281,9 @@ function ClubCardDetail({ club: c, onSaved }) {
 
 function Mini({ k, v }) {
     return (
-        <div className="rounded-xl bg-white/5 border border-white/5 p-3">
-            <div className="text-[10px] uppercase tracking-widest text-white/40">{k}</div>
-            <div className="mt-1 text-white/90">{v}</div>
+        <div className="rounded-xl bg-fg/5 border border-fg/5 p-3">
+            <div className="text-[10px] uppercase tracking-widest text-fg/40">{k}</div>
+            <div className="mt-1 text-fg/90">{v}</div>
         </div>
     );
 }
@@ -313,7 +313,7 @@ function UsersTab() {
     return (
         <Card title="Users and roles" subtitle="Club admins and gate accounts must belong to a club. Users can always sign in again to pick up a new role.">
             {loading ? (
-                <div className="text-white/50 font-body text-sm">Loading…</div>
+                <div className="text-fg/50 font-body text-sm">Loading…</div>
             ) : (
                 <div className="space-y-2" data-testid="users-list">
                     {users.map((u) => (
@@ -342,20 +342,20 @@ function UserRow({ user: u, clubs, onSaved }) {
     };
 
     return (
-        <div className="grid md:grid-cols-[1.4fr_1fr_1fr_auto] gap-3 items-center rounded-xl border border-white/10 p-3" data-testid={`user-${u.email}`}>
+        <div className="grid md:grid-cols-[1.4fr_1fr_1fr_auto] gap-3 items-center rounded-xl border border-fg/10 p-3" data-testid={`user-${u.email}`}>
             <div className="min-w-0">
                 <div className="font-body font-semibold truncate">{u.name}</div>
-                <div className="font-body text-xs text-white/50 truncate">{u.email}</div>
+                <div className="font-body text-xs text-fg/50 truncate">{u.email}</div>
             </div>
             <select className={inputCls} value={role} onChange={(e) => setRole(e.target.value)}>
                 {ROLE_OPTIONS.map((r) => (
-                    <option key={r.id} value={r.id} className="bg-[#0b0f19]">{r.label}</option>
+                    <option key={r.id} value={r.id} className="bg-canvas">{r.label}</option>
                 ))}
             </select>
             <select className={inputCls} value={clubId} disabled={!needsClub} onChange={(e) => setClubId(e.target.value)}>
-                <option value="" className="bg-[#0b0f19]">{needsClub ? "Pick a club…" : "No club"}</option>
+                <option value="" className="bg-canvas">{needsClub ? "Pick a club…" : "No club"}</option>
                 {clubs.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-[#0b0f19]">{c.name}</option>
+                    <option key={c.id} value={c.id} className="bg-canvas">{c.name}</option>
                 ))}
             </select>
             <Btn variant="primary" disabled={!dirty || (needsClub && !clubId)} onClick={save}>
@@ -384,20 +384,20 @@ function BookingsTab() {
 
     return (
         <div className="space-y-3">
-            <div className="flex justify-between items-center font-body text-sm text-white/50">
+            <div className="flex justify-between items-center font-body text-sm text-fg/50">
                 <span>Latest 200 bookings across all clubs. ID numbers are never shown.</span>
                 <Btn onClick={load}>
                     <RefreshCw className="w-4 h-4" /> Refresh
                 </Btn>
             </div>
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : rows.length === 0 ? (
                 <Empty>No bookings yet.</Empty>
             ) : (
-                <div className="rounded-2xl border border-white/10 overflow-x-auto">
+                <div className="rounded-2xl border border-fg/10 overflow-x-auto">
                     <table className="w-full text-left font-body text-xs md:text-sm">
-                        <thead className="text-[11px] uppercase tracking-widest text-white/40 bg-white/5">
+                        <thead className="text-[11px] uppercase tracking-widest text-fg/40 bg-fg/5">
                             <tr>
                                 <th className="p-3">When</th>
                                 <th className="p-3">Guest</th>
@@ -411,8 +411,8 @@ function BookingsTab() {
                         </thead>
                         <tbody>
                             {rows.map((r) => (
-                                <tr key={r.id} className="border-t border-white/5">
-                                    <td className="p-3 whitespace-nowrap text-white/60">{fmtDateTime(r.created_at)}</td>
+                                <tr key={r.id} className="border-t border-fg/5">
+                                    <td className="p-3 whitespace-nowrap text-fg/60">{fmtDateTime(r.created_at)}</td>
                                     <td className="p-3">{r.attendee_name}</td>
                                     <td className="p-3">{r.event_title}</td>
                                     <td className="p-3">{r.tier} × {r.quantity}</td>
@@ -449,12 +449,12 @@ function GatewaysTab() {
 
     return (
         <div className="space-y-4">
-            <p className="font-body text-sm text-white/50">
+            <p className="font-body text-sm text-fg/50">
                 Only one gateway is used for checkout: the first enabled one. Secret keys live in server environment
                 variables, not in this panel. Checkout is still simulated until a gateway SDK is wired in.
             </p>
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : (
                 gws.map((g) => <GatewayRow key={g.id} gw={g} onSaved={load} />)
             )}
@@ -478,19 +478,19 @@ function GatewayRow({ gw, onSaved }) {
     };
 
     return (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 grid md:grid-cols-[1fr_auto_1fr_auto_auto] gap-4 items-center" data-testid={`gateway-${gw.id}`}>
+        <div className="rounded-2xl border border-fg/10 bg-fg/5 p-4 grid md:grid-cols-[1fr_auto_1fr_auto_auto] gap-4 items-center" data-testid={`gateway-${gw.id}`}>
             <div>
                 <div className="font-display font-semibold">{gw.name}</div>
-                <div className="font-body text-xs text-white/40">Last changed {fmtDateTime(gw.updated_at)}</div>
+                <div className="font-body text-xs text-fg/40">Last changed {fmtDateTime(gw.updated_at)}</div>
             </div>
             <label className="flex items-center gap-2 font-body text-sm">
-                <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="w-4 h-4 accent-purple-500" />
+                <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="w-4 h-4 accent-brand" />
                 Enabled
             </label>
             <input className={inputCls} placeholder="Public key id (e.g. rzp_test_…)" value={keyId} onChange={(e) => setKeyId(e.target.value)} />
             <select className={`${inputCls} md:w-28`} value={mode} onChange={(e) => setMode(e.target.value)}>
-                <option value="test" className="bg-[#0b0f19]">Test</option>
-                <option value="live" className="bg-[#0b0f19]">Live</option>
+                <option value="test" className="bg-canvas">Test</option>
+                <option value="live" className="bg-canvas">Live</option>
             </select>
             <Btn variant="primary" onClick={save}>
                 <Save className="w-4 h-4" /> Save
@@ -558,7 +558,7 @@ function ScansTab() {
                         key={k}
                         type="button"
                         onClick={() => setFilter(k)}
-                        className={`rounded-full px-3 py-1.5 font-body text-xs border ${filter === k ? "bg-white text-black border-white" : "bg-white/5 text-white/70 border-white/10"}`}
+                        className={`rounded-full px-3 py-1.5 font-body text-xs border ${filter === k ? "bg-fg text-canvas border-fg" : "bg-fg/5 text-fg/70 border-fg/10"}`}
                     >
                         {k === "all" ? "All" : SCAN_LABEL[k]}
                     </button>
@@ -570,13 +570,13 @@ function ScansTab() {
             </div>
 
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : shown.length === 0 ? (
                 <Empty>No scans match this filter.</Empty>
             ) : (
-                <div className="rounded-2xl border border-white/10 overflow-x-auto" data-testid="dev-scan-table">
+                <div className="rounded-2xl border border-fg/10 overflow-x-auto" data-testid="dev-scan-table">
                     <table className="w-full text-left font-body text-xs md:text-sm">
-                        <thead className="text-[11px] uppercase tracking-widest text-white/40 bg-white/5">
+                        <thead className="text-[11px] uppercase tracking-widest text-fg/40 bg-fg/5">
                             <tr>
                                 <th className="p-3">Scanned</th>
                                 <th className="p-3">Result</th>
@@ -592,8 +592,8 @@ function ScansTab() {
                         </thead>
                         <tbody>
                             {shown.map((r) => (
-                                <tr key={r.id} className="border-t border-white/5" data-testid={`dev-scan-${r.id}`}>
-                                    <td className="p-3 whitespace-nowrap text-white/60">{fmtDateTime(r.scanned_at)}</td>
+                                <tr key={r.id} className="border-t border-fg/5" data-testid={`dev-scan-${r.id}`}>
+                                    <td className="p-3 whitespace-nowrap text-fg/60">{fmtDateTime(r.scanned_at)}</td>
                                     <td className="p-3"><Badge tone={SCAN_TONE[r.result] || "grey"}>{SCAN_LABEL[r.result] || r.result}</Badge></td>
                                     <td className="p-3">{r.attendee_name || "—"}</td>
                                     <td className="p-3">{r.attendee_phone || "—"}</td>
@@ -601,8 +601,8 @@ function ScansTab() {
                                     <td className="p-3">{r.event_title || "—"}</td>
                                     <td className="p-3">{clubs[r.club_id] || r.club_id || "—"}</td>
                                     <td className="p-3">{r.gate_name || "—"}</td>
-                                    <td className="p-3 whitespace-nowrap text-white/60">{r.decided_at ? fmtDateTime(r.decided_at) : "—"}</td>
-                                    <td className="p-3 text-white/60">{r.reason || "—"}</td>
+                                    <td className="p-3 whitespace-nowrap text-fg/60">{r.decided_at ? fmtDateTime(r.decided_at) : "—"}</td>
+                                    <td className="p-3 text-fg/60">{r.reason || "—"}</td>
                                 </tr>
                             ))}
                         </tbody>

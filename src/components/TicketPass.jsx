@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { STATUS_STYLE, STATUS_LABEL, QRSlot, QRModal } from "@/components/TicketCard";
 
-const PURPLE = "#c04fd8";
+const PURPLE = "#E8431F";
 
 // "Neon Nights Pune" -> ["Neon Nights", "Pune"] so the title can be two-tone.
 function splitTitle(title = "") {
@@ -29,7 +29,7 @@ export default function TicketPass({ ticket, highlighted = false }) {
             <div
                 data-testid={`ticket-pass-${ticket.id}`}
                 className="relative"
-                style={highlighted ? { filter: "drop-shadow(0 0 16px rgba(192,79,216,0.7))" } : undefined}
+                style={highlighted ? { filter: "drop-shadow(0 0 16px rgba(255,90,54,0.6))" } : undefined}
             >
                 {/* ---------- top: QR + label + headline image ---------- */}
                 <div className="ticket-top rounded-t-[28px] bg-gradient-to-br from-[#ecebe8] to-[#d3d0cb] p-4 pb-7">

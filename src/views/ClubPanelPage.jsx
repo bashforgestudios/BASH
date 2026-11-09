@@ -136,14 +136,14 @@ export default function ClubPanelPage() {
     if (loading || !user) {
         return (
             <AppShell>
-                <div className="p-10 text-white/60 font-body">Loading…</div>
+                <div className="p-10 text-fg/60 font-body">Loading…</div>
             </AppShell>
         );
     }
     if (user.role !== "club_admin") {
         return (
             <AppShell>
-                <div className="p-10 text-white/60 font-body">This panel is for club admins.</div>
+                <div className="p-10 text-fg/60 font-body">This panel is for club admins.</div>
             </AppShell>
         );
     }
@@ -152,7 +152,7 @@ export default function ClubPanelPage() {
         <AppShell>
             <div className="max-w-6xl mx-auto px-5 md:px-10 py-8">
                 <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight">Club Panel</h1>
-                <p className="font-body text-white/50 text-sm mt-1">
+                <p className="font-body text-fg/50 text-sm mt-1">
                     Create events, review guest bookings, manage the door.
                 </p>
                 <div className="mt-6">
@@ -220,16 +220,16 @@ function EventsTab() {
     return (
         <div className="space-y-4">
             {data.club && !verified && (
-                <div className="rounded-2xl border border-amber-400/40 bg-amber-500/10 p-4 font-body text-sm text-amber-100" data-testid="club-unverified-banner">
+                <div className="rounded-2xl border border-warning/40 bg-warning/10 p-4 font-body text-sm text-warning-ink" data-testid="club-unverified-banner">
                     Your club is not approved yet. Bash is reviewing your documents. You can create events once the club is approved.
                 </div>
             )}
             <div className="flex items-center justify-between flex-wrap gap-3">
-                <div className="font-body text-sm text-white/60" data-testid="club-summary">
+                <div className="font-body text-sm text-fg/60" data-testid="club-summary">
                     {data.club ? (
                         <>
-                            <span className="text-white font-semibold">{data.club.name}</span> · {data.club.city} · venue
-                            capacity <span className="text-white font-semibold">{data.club.capacity}</span>
+                            <span className="text-fg font-semibold">{data.club.name}</span> · {data.club.city} · venue
+                            capacity <span className="text-fg font-semibold">{data.club.capacity}</span>
                         </>
                     ) : (
                         "Loading club…"
@@ -241,7 +241,7 @@ function EventsTab() {
             </div>
 
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : data.events.length === 0 ? (
                 <Empty>No events yet. Create your first one.</Empty>
             ) : (
@@ -271,12 +271,12 @@ function EventRow({ ev, onEdit, onToggle }) {
     return (
         <div
             data-testid={`club-event-${ev.id}`}
-            className="rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col md:flex-row md:items-center gap-4"
+            className="rounded-2xl border border-fg/10 bg-fg/5 p-4 flex flex-col md:flex-row md:items-center gap-4"
         >
             {ev.image ? (
                 <img loading="lazy" decoding="async" src={ev.image} alt="" className="w-20 h-20 rounded-xl object-cover shrink-0" />
             ) : (
-                <div className="w-20 h-20 rounded-xl bg-white/5 border border-dashed border-white/15 shrink-0" />
+                <div className="w-20 h-20 rounded-xl bg-fg/5 border border-dashed border-fg/15 shrink-0" />
             )}
             <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
@@ -288,13 +288,13 @@ function EventRow({ ev, onEdit, onToggle }) {
                     {ev.featured && <Badge tone="blue">Featured</Badge>}
                     {placement && placement.slug !== "none" && <Badge tone="blue">{placement.name}</Badge>}
                 </div>
-                <div className="text-xs text-white/50 font-body mt-1">
+                <div className="text-xs text-fg/50 font-body mt-1">
                     {ev.date} · {ev.time} · {BOOKING_TYPES.find((b) => b.slug === ev.booking_type)?.name}
                 </div>
                 {genreNames.length > 0 && (
-                    <div className="text-xs text-white/50 font-body mt-0.5">{genreNames.join(" · ")}</div>
+                    <div className="text-xs text-fg/50 font-body mt-0.5">{genreNames.join(" · ")}</div>
                 )}
-                <div className="text-xs text-white/70 font-body mt-2">
+                <div className="text-xs text-fg/70 font-body mt-2">
                     Quota {quota} · sold {sold} ·{" "}
                     {ev.tiers.map((t) => `${t.name} ${t.price ? inr(t.price) : "free"}`).join(", ")}
                 </div>
@@ -415,15 +415,15 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
 
                 <div className="grid md:grid-cols-[200px_1fr] gap-4 items-start">
                     <div>
-                        <div className="font-body text-[11px] uppercase tracking-widest text-white/50 mb-1.5">Flyer</div>
-                        <div className="aspect-[4/5] w-full rounded-xl bg-white/5 border border-dashed border-white/15 overflow-hidden flex items-center justify-center">
+                        <div className="font-body text-[11px] uppercase tracking-widest text-fg/50 mb-1.5">Flyer</div>
+                        <div className="aspect-[4/5] w-full rounded-xl bg-fg/5 border border-dashed border-fg/15 overflow-hidden flex items-center justify-center">
                             {form.image ? (
                                 <img src={form.image} alt="Flyer preview" className="w-full h-full object-cover" />
                             ) : (
-                                <span className="text-xs text-white/40 font-body">No flyer yet</span>
+                                <span className="text-xs text-fg/40 font-body">No flyer yet</span>
                             )}
                         </div>
-                        <label className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-2 font-body text-sm cursor-pointer">
+                        <label className="mt-2 inline-flex items-center gap-2 rounded-full bg-fg/5 border border-fg/10 hover:bg-fg/10 px-4 py-2 font-body text-sm cursor-pointer">
                             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                             {form.image ? "Replace flyer" : "Upload flyer"}
                             <input
@@ -434,11 +434,11 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
                                 onChange={(e) => onFlyer(e.target.files?.[0])}
                             />
                         </label>
-                        <p className="text-[11px] text-white/40 font-body mt-1">JPG, PNG or WebP, under 2 MB.</p>
+                        <p className="text-[11px] text-fg/40 font-body mt-1">JPG, PNG or WebP, under 2 MB.</p>
                     </div>
 
                     <div>
-                        <div className="font-body text-[11px] uppercase tracking-widest text-white/50 mb-1.5">
+                        <div className="font-body text-[11px] uppercase tracking-widest text-fg/50 mb-1.5">
                             Genre tags (up to 4)
                         </div>
                         <div className="flex flex-wrap gap-2">
@@ -451,7 +451,7 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
                                         data-testid={`genre-tag-${g.slug}`}
                                         onClick={() => toggleGenre(g.slug)}
                                         className={`rounded-full px-3.5 py-1.5 font-body text-sm border transition ${
-                                            on ? "bg-white text-black border-white" : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
+                                            on ? "bg-fg text-canvas border-fg" : "bg-fg/5 text-fg/70 border-fg/10 hover:bg-fg/10"
                                         }`}
                                     >
                                         {g.name}
@@ -472,11 +472,11 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
                             data-testid={`booking-type-${b.slug}`}
                             onClick={() => set("booking_type", b.slug)}
                             className={`text-left rounded-2xl border p-4 transition ${
-                                form.booking_type === b.slug ? "border-purple-400 bg-purple-500/10" : "border-white/10 bg-white/5 hover:bg-white/10"
+                                form.booking_type === b.slug ? "border-brand bg-brand/10" : "border-fg/10 bg-fg/5 hover:bg-fg/10"
                             }`}
                         >
                             <div className="font-display font-semibold">{b.name}</div>
-                            <div className="font-body text-xs text-white/60 mt-1">{TYPE_HELP[b.slug]}</div>
+                            <div className="font-body text-xs text-fg/60 mt-1">{TYPE_HELP[b.slug]}</div>
                         </button>
                     ))}
                 </div>
@@ -485,13 +485,13 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
             <Card title="Homepage placement">
                 <div className="grid md:grid-cols-2 gap-4 items-end">
                     <label className="flex items-center gap-3 font-body text-sm">
-                        <input type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} className="w-4 h-4 accent-purple-500" />
+                        <input type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} className="w-4 h-4 accent-brand" />
                         Featured event (shown first in listings)
                     </label>
                     <Field label="Homepage placement">
                         <select className={inputCls} value={form.homepage_placement} onChange={(e) => set("homepage_placement", e.target.value)}>
                             {HOMEPAGE_PLACEMENTS.map((p) => (
-                                <option key={p.slug} value={p.slug} className="bg-[#0b0f19]">
+                                <option key={p.slug} value={p.slug} className="bg-canvas">
                                     {p.name}
                                 </option>
                             ))}
@@ -509,15 +509,15 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
                     </Btn>
                 }
             >
-                <div className={`mb-4 rounded-xl p-3 text-sm font-body border ${left < 0 ? "bg-red-500/10 border-red-400/30 text-red-200" : "bg-white/5 border-white/10 text-white/70"}`} data-testid="quota-summary">
-                    Venue capacity <b className="text-white">{capacity}</b> · this event <b className="text-white">{mine}</b> · other events on{" "}
-                    {day || "this date"} <b className="text-white">{others}</b> · left <b className="text-white">{left}</b>
+                <div className={`mb-4 rounded-xl p-3 text-sm font-body border ${left < 0 ? "bg-danger/10 border-danger/30 text-danger-ink" : "bg-fg/5 border-fg/10 text-fg/70"}`} data-testid="quota-summary">
+                    Venue capacity <b className="text-fg">{capacity}</b> · this event <b className="text-fg">{mine}</b> · other events on{" "}
+                    {day || "this date"} <b className="text-fg">{others}</b> · left <b className="text-fg">{left}</b>
                     {left < 0 && <span className="block mt-1">Over capacity. Lower the quotas before saving.</span>}
                 </div>
 
                 <div className="space-y-4">
                     {form.tiers.map((t, i) => (
-                        <div key={i} className="rounded-2xl border border-white/10 p-4 space-y-3">
+                        <div key={i} className="rounded-2xl border border-fg/10 p-4 space-y-3">
                             <div className="grid md:grid-cols-[1fr_120px_120px_1fr_auto] gap-3 items-end">
                                 <Field label="Category">
                                     <input className={inputCls} value={t.name} placeholder="Stag, Couple, VIP…" onChange={(e) => setTier(i, "name", e.target.value)} />
@@ -536,7 +536,7 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
                                     onClick={() => removeTier(i)}
                                     disabled={form.tiers.length === 1}
                                     aria-label="Remove category"
-                                    className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 disabled:opacity-30 flex items-center justify-center"
+                                    className="w-10 h-10 rounded-full bg-fg/5 hover:bg-fg/10 disabled:opacity-30 flex items-center justify-center"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -570,7 +570,7 @@ function EventEditor({ club, events, initial, onDone, onCancel }) {
             </Card>
 
             {errors.length > 0 && (
-                <div data-testid="event-errors" className="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 font-body text-sm text-red-200 space-y-1">
+                <div data-testid="event-errors" className="rounded-2xl border border-danger/30 bg-danger/10 p-4 font-body text-sm text-danger-ink space-y-1">
                     {errors.map((m, i) => (
                         <div key={i}>• {m}</div>
                     ))}
@@ -652,7 +652,7 @@ function BookingsTab() {
                         onClick={() => setStatus(t.id)}
                         data-testid={`queue-${t.id}`}
                         className={`rounded-full px-4 py-2 font-body text-sm border transition ${
-                            status === t.id ? "bg-white text-black border-white" : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
+                            status === t.id ? "bg-fg text-canvas border-fg" : "bg-fg/5 text-fg/70 border-fg/10 hover:bg-fg/10"
                         }`}
                     >
                         {t.label} <span className="opacity-60">{counts[t.id] || 0}</span>
@@ -662,11 +662,11 @@ function BookingsTab() {
                 <select
                     value={eventId}
                     onChange={(e) => setEventId(e.target.value)}
-                    className="rounded-full bg-white/5 border border-white/10 px-4 py-2 font-body text-sm outline-none"
+                    className="rounded-full bg-fg/5 border border-fg/10 px-4 py-2 font-body text-sm outline-none"
                 >
-                    <option value="all" className="bg-[#0b0f19]">All events</option>
+                    <option value="all" className="bg-canvas">All events</option>
                     {events.map(([id, title]) => (
-                        <option key={id} value={id} className="bg-[#0b0f19]">
+                        <option key={id} value={id} className="bg-canvas">
                             {title}
                         </option>
                     ))}
@@ -677,7 +677,7 @@ function BookingsTab() {
             </div>
 
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : shown.length === 0 ? (
                 <Empty>Nothing in {STATUS_TABS.find((t) => t.id === status)?.label.toLowerCase()}.</Empty>
             ) : (
@@ -688,11 +688,11 @@ function BookingsTab() {
                             type="button"
                             onClick={() => setOpen(b)}
                             data-testid={`booking-row-${b.id}`}
-                            className="w-full text-left rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 p-4 flex flex-col md:flex-row md:items-center gap-3 transition"
+                            className="w-full text-left rounded-2xl border border-fg/10 bg-fg/5 hover:bg-fg/10 p-4 flex flex-col md:flex-row md:items-center gap-3 transition"
                         >
                             <div className="flex-1 min-w-0">
                                 <div className="font-display font-semibold truncate">{b.attendee_name}</div>
-                                <div className="font-body text-xs text-white/50 truncate">
+                                <div className="font-body text-xs text-fg/50 truncate">
                                     {b.event_title} · {b.tier} × {b.quantity} · {b.attendee_email}
                                 </div>
                             </div>
@@ -786,18 +786,18 @@ function BookingDrawer({ booking: b, onClose, onChanged }) {
             <div
                 onClick={(e) => e.stopPropagation()}
                 data-testid="booking-drawer"
-                className="w-full max-w-xl h-full overflow-y-auto bg-[#0b0f19] border-l border-white/10 p-6 space-y-5"
+                className="w-full max-w-xl h-full overflow-y-auto bg-canvas border-l border-fg/10 p-6 space-y-5"
             >
                 <div className="flex items-start justify-between">
                     <div>
-                        <div className="font-body text-xs uppercase tracking-widest text-white/40">Guest booking</div>
+                        <div className="font-body text-xs uppercase tracking-widest text-fg/40">Guest booking</div>
                         <h3 className="font-display text-2xl font-bold mt-1">{b.attendee_name}</h3>
                         <div className="flex flex-wrap gap-2 mt-2">
                             <Badge tone={STATUS_TONE[b.status]} testid="drawer-status">{b.status.replace("_", " ")}</Badge>
                             {b.used_at && <Badge tone="green">Admitted {fmtDateTime(b.used_at)}</Badge>}
                         </div>
                     </div>
-                    <button onClick={onClose} aria-label="Close" className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center">
+                    <button onClick={onClose} aria-label="Close" className="w-10 h-10 rounded-full bg-fg/5 hover:bg-fg/10 flex items-center justify-center">
                         <X className="w-4 h-4" />
                     </button>
                 </div>
@@ -816,28 +816,28 @@ function BookingDrawer({ booking: b, onClose, onChanged }) {
                         <Detail k="Requested" v={fmtDateTime(b.created_at)} />
                     </dl>
                     {b.transferred_from && (
-                        <div className="mt-4 text-xs font-body text-white/60">Transferred from {b.transferred_from}</div>
+                        <div className="mt-4 text-xs font-body text-fg/60">Transferred from {b.transferred_from}</div>
                     )}
                     {b.review_reason && (
-                        <div className="mt-4 text-xs font-body text-white/60">Reason: {b.review_reason}</div>
+                        <div className="mt-4 text-xs font-body text-fg/60">Reason: {b.review_reason}</div>
                     )}
                 </Card>
 
                 <Card title="ID check" subtitle="The photo is shown only while the booking is pending. It is deleted after any decision.">
                     {b.photo_status === "on_file" && b.status === "pending" ? (
                         photoState === "loading" ? (
-                            <div className="text-white/50 font-body text-sm">Loading photo…</div>
+                            <div className="text-fg/50 font-body text-sm">Loading photo…</div>
                         ) : photo ? (
                             <img src={photo} alt="Guest ID" data-testid="id-photo-view" className="rounded-xl max-h-80 w-full object-contain bg-black/40" />
                         ) : (
-                            <div className="text-white/50 font-body text-sm">The photo could not be loaded.</div>
+                            <div className="text-fg/50 font-body text-sm">The photo could not be loaded.</div>
                         )
                     ) : b.photo_status === "deleted" ? (
-                        <div className="flex items-center gap-2 text-emerald-200 font-body text-sm" data-testid="photo-deleted-confirm">
+                        <div className="flex items-center gap-2 text-success-ink font-body text-sm" data-testid="photo-deleted-confirm">
                             <Check className="w-4 h-4" /> ID photo deleted {b.photo_deleted_at ? fmtDateTime(b.photo_deleted_at) : ""} after the decision. Nothing is kept.
                         </div>
                     ) : (
-                        <div className="text-white/50 font-body text-sm">No ID photo for this booking (open booking).</div>
+                        <div className="text-fg/50 font-body text-sm">No ID photo for this booking (open booking).</div>
                     )}
                 </Card>
 
@@ -891,7 +891,7 @@ function BookingDrawer({ booking: b, onClose, onChanged }) {
                 )}
 
                 {err && (
-                    <div data-testid="drawer-error" className="rounded-xl border border-red-400/30 bg-red-500/10 p-3 font-body text-sm text-red-200">
+                    <div data-testid="drawer-error" className="rounded-xl border border-danger/30 bg-danger/10 p-3 font-body text-sm text-danger-ink">
                         {err}
                     </div>
                 )}
@@ -903,8 +903,8 @@ function BookingDrawer({ booking: b, onClose, onChanged }) {
 function Detail({ k, v, mono = false }) {
     return (
         <div>
-            <dt className="text-[11px] uppercase tracking-widest text-white/40">{k}</dt>
-            <dd className={`text-white/90 break-all ${mono ? "font-mono" : ""}`}>{v || "—"}</dd>
+            <dt className="text-[11px] uppercase tracking-widest text-fg/40">{k}</dt>
+            <dd className={`text-fg/90 break-all ${mono ? "font-mono" : ""}`}>{v || "—"}</dd>
         </div>
     );
 }
@@ -971,16 +971,16 @@ function GatesTab() {
 
             <Card title="Gate accounts">
                 {loading ? (
-                    <div className="text-white/50 font-body text-sm">Loading…</div>
+                    <div className="text-fg/50 font-body text-sm">Loading…</div>
                 ) : gates.length === 0 ? (
                     <Empty>No gate accounts yet.</Empty>
                 ) : (
                     <div className="space-y-2">
                         {gates.map((g) => (
-                            <div key={g.id} className="flex items-center justify-between rounded-xl border border-white/10 p-3" data-testid={`gate-${g.id}`}>
+                            <div key={g.id} className="flex items-center justify-between rounded-xl border border-fg/10 p-3" data-testid={`gate-${g.id}`}>
                                 <div>
                                     <div className="font-body font-semibold">{g.name}</div>
-                                    <div className="font-body text-xs text-white/50">{g.email}</div>
+                                    <div className="font-body text-xs text-fg/50">{g.email}</div>
                                 </div>
                                 <Btn variant="danger" onClick={() => remove(g.id)} aria-label="Remove gate account">
                                     <Trash2 className="w-4 h-4" /> Remove
@@ -1028,7 +1028,7 @@ function ScansTab() {
         <div className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(RESULT).map(([k, [tone, label]]) => (
-                    <div key={k} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div key={k} className="rounded-2xl border border-fg/10 bg-fg/5 p-4">
                         <Badge tone={tone}>{label}</Badge>
                         <div className="font-display text-3xl font-bold mt-2" data-testid={`scan-count-${k}`}>{count(k)}</div>
                     </div>
@@ -1042,13 +1042,13 @@ function ScansTab() {
             </div>
 
             {loading ? (
-                <div className="text-white/50 font-body">Loading…</div>
+                <div className="text-fg/50 font-body">Loading…</div>
             ) : rows.length === 0 ? (
                 <Empty>No scans yet. Entries appear here as the gate scans tickets.</Empty>
             ) : (
-                <div className="rounded-2xl border border-white/10 overflow-x-auto" data-testid="scan-table">
+                <div className="rounded-2xl border border-fg/10 overflow-x-auto" data-testid="scan-table">
                     <table className="w-full text-left font-body text-sm">
-                        <thead className="text-[11px] uppercase tracking-widest text-white/40 bg-white/5">
+                        <thead className="text-[11px] uppercase tracking-widest text-fg/40 bg-fg/5">
                             <tr>
                                 <th className="p-3">When</th>
                                 <th className="p-3">Result</th>
@@ -1059,14 +1059,14 @@ function ScansTab() {
                         </thead>
                         <tbody>
                             {rows.map((r) => (
-                                <tr key={r.id} className="border-t border-white/5">
-                                    <td className="p-3 whitespace-nowrap text-white/70">{fmtDateTime(r.scanned_at)}</td>
+                                <tr key={r.id} className="border-t border-fg/5">
+                                    <td className="p-3 whitespace-nowrap text-fg/70">{fmtDateTime(r.scanned_at)}</td>
                                     <td className="p-3">
                                         <Badge tone={RESULT[r.result]?.[0]}>{RESULT[r.result]?.[1] || r.result}</Badge>
                                     </td>
                                     <td className="p-3 font-mono text-xs">{r.ticket_code || "—"}</td>
                                     <td className="p-3">{r.gate_name || "—"}</td>
-                                    <td className="p-3 text-white/60">{r.reason || "—"}</td>
+                                    <td className="p-3 text-fg/60">{r.reason || "—"}</td>
                                 </tr>
                             ))}
                         </tbody>

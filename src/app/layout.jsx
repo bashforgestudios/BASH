@@ -1,17 +1,20 @@
 import "./globals.css";
 import Providers from "./providers";
+import { THEME_SCRIPT } from "@/lib/theme";
 
 export const metadata = {
     title: "Bash — Live Events & Clubs in India",
     description: "Live concerts, club nights and festivals across India.",
 };
 
-export const viewport = { themeColor: "#000000" };
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
+        <html lang="en" data-theme="dark" suppressHydrationWarning>
             <head>
+                {/* sets the theme before first paint so there is no flash */}
+                <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+                <meta name="theme-color" content="#0F0E0D" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
                 <link

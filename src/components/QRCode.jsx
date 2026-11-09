@@ -22,7 +22,7 @@ export default function QRCode({ value, className = "", label = "Ticket QR code"
             aria-label={label}
         >
             <rect width="100%" height="100%" fill="#ffffff" />
-            <path d={qr.path} fill="#0b0f19" />
+            <path d={qr.path} fill="#16120e" />
         </svg>
     );
 }

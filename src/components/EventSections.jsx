@@ -18,7 +18,7 @@ import {
 import { resizeImg } from "@/lib/api";
 
 const chip =
-    "rounded-full bg-white/5 border border-white/10 px-4 py-2 flex items-center gap-2 font-body text-sm";
+    "rounded-full bg-fg/5 border border-fg/10 px-4 py-2 flex items-center gap-2 font-body text-sm";
 
 function Section({ id, title, aside, children }) {
     return (
@@ -45,7 +45,7 @@ function Avatar({ name, src, className }) {
     if (!src || failed) {
         return (
             <div
-                className={`${className} bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-display text-3xl font-bold`}
+                className={`${className} bg-brand flex items-center justify-center font-display text-3xl font-bold`}
             >
                 {initials}
             </div>
@@ -70,8 +70,8 @@ function Stars({ value, size = "w-4 h-4" }) {
                     key={n}
                     className={`${size} ${
                         n <= Math.round(value)
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-white/20"
+                            ? "text-warning-ink fill-warning"
+                            : "text-fg/20"
                     }`}
                 />
             ))}
@@ -87,19 +87,19 @@ export function QuickInfo({ event }) {
         <>
             {i.age_limit && (
                 <div className={chip} data-testid="info-age">
-                    <ShieldCheck className="w-4 h-4 text-white/60" />
+                    <ShieldCheck className="w-4 h-4 text-fg/60" />
                     {i.age_limit}
                 </div>
             )}
             {i.doors_open && (
                 <div className={chip} data-testid="info-doors">
-                    <DoorOpen className="w-4 h-4 text-white/60" />
+                    <DoorOpen className="w-4 h-4 text-fg/60" />
                     Doors {i.doors_open}
                 </div>
             )}
             {i.duration && (
                 <div className={chip} data-testid="info-duration">
-                    <Hourglass className="w-4 h-4 text-white/60" />
+                    <Hourglass className="w-4 h-4 text-fg/60" />
                     {i.duration}
                 </div>
             )}
@@ -124,7 +124,7 @@ export function SectionNav({ event }) {
                     key={id}
                     href={`#${id}`}
                     data-testid={`jump-${id}`}
-                    className="shrink-0 rounded-full px-4 py-2 font-body text-sm border bg-white/5 text-white/80 border-white/10 hover:bg-white/10 transition"
+                    className="shrink-0 rounded-full px-4 py-2 font-body text-sm border bg-fg/5 text-fg/80 border-fg/10 hover:bg-fg/10 transition"
                 >
                     {label}
                 </a>
@@ -150,10 +150,10 @@ export function LineupSection({ event }) {
                             <Avatar
                                 name={a.name}
                                 src={a.photo}
-                                className="w-40 h-40 md:w-44 md:h-44 rounded-3xl border border-white/10"
+                                className="w-40 h-40 md:w-44 md:h-44 rounded-3xl border border-fg/10"
                             />
                             {a.role === "Headliner" && (
-                                <span className="absolute top-2 left-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
+                                <span className="absolute top-2 left-2 rounded-full bg-brand px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-fg">
                                     Headliner
                                 </span>
                             )}
@@ -161,7 +161,7 @@ export function LineupSection({ event }) {
                         <div className="mt-3 font-display text-lg font-semibold leading-tight">
                             {a.name}
                         </div>
-                        <div className="font-body text-xs text-white/60 mt-0.5">
+                        <div className="font-body text-xs text-fg/60 mt-0.5">
                             {a.role !== "Headliner" && a.role}
                             {a.role !== "Headliner" && a.set_time && " · "}
                             {a.set_time}
@@ -205,7 +205,7 @@ export function GallerySection({ event }) {
                         key={`${src}-${i}`}
                         onClick={() => setOpen(i)}
                         data-testid={`gallery-${i}`}
-                        className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 group"
+                        className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-fg/10 group"
                     >
                         <img
                             src={resizeImg(src, 700)}
@@ -225,13 +225,13 @@ export function GallerySection({ event }) {
                         exit={{ opacity: 0 }}
                         onClick={close}
                         data-testid="lightbox"
-                        className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+                        className="on-media fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
                     >
                         <button
                             onClick={close}
                             aria-label="Close"
                             data-testid="lightbox-close"
-                            className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center"
+                            className="absolute top-5 right-5 w-11 h-11 rounded-full bg-fg/10 hover:bg-fg/20 flex items-center justify-center"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -243,7 +243,7 @@ export function GallerySection({ event }) {
                                         step(-1);
                                     }}
                                     aria-label="Previous"
-                                    className="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center"
+                                    className="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-fg/10 hover:bg-fg/20 flex items-center justify-center"
                                 >
                                     <ChevronLeft className="w-5 h-5" />
                                 </button>
@@ -253,7 +253,7 @@ export function GallerySection({ event }) {
                                         step(1);
                                     }}
                                     aria-label="Next"
-                                    className="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center"
+                                    className="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-fg/10 hover:bg-fg/20 flex items-center justify-center"
                                 >
                                     <ChevronRight className="w-5 h-5" />
                                 </button>
@@ -265,7 +265,7 @@ export function GallerySection({ event }) {
                             onClick={(e) => e.stopPropagation()}
                             className="max-h-[85vh] max-w-full rounded-2xl object-contain"
                         />
-                        <div className="absolute bottom-5 font-body text-xs text-white/60">
+                        <div className="absolute bottom-5 font-body text-xs text-fg/60">
                             {open + 1} / {images.length}
                         </div>
                     </motion.div>
@@ -294,7 +294,7 @@ export function ReviewsSection({ event }) {
                         </span>
                         <div>
                             <Stars value={avg} size="w-3.5 h-3.5" />
-                            <div className="font-body text-[11px] text-white/50">
+                            <div className="font-body text-[11px] text-fg/50">
                                 {reviews.length} review{reviews.length > 1 && "s"}
                             </div>
                         </div>
@@ -303,7 +303,7 @@ export function ReviewsSection({ event }) {
             }
         >
             {reviews.length === 0 ? (
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 font-body text-sm text-white/60">
+                <div className="rounded-2xl border border-fg/10 bg-fg/5 p-5 font-body text-sm text-fg/60">
                     No guest reviews yet.
                 </div>
             ) : (
@@ -312,13 +312,13 @@ export function ReviewsSection({ event }) {
                         <div
                             key={`${r.name}-${i}`}
                             data-testid={`review-${i}`}
-                            className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                            className="rounded-2xl border border-fg/10 bg-fg/5 p-5"
                         >
                             <Stars value={r.rating} />
-                            <p className="font-body text-sm text-white/80 leading-relaxed mt-3">
+                            <p className="font-body text-sm text-fg/80 leading-relaxed mt-3">
                                 {r.comment}
                             </p>
-                            <div className="font-body text-xs text-white/50 mt-4">
+                            <div className="font-body text-xs text-fg/50 mt-4">
                                 {r.name}
                                 {r.date && ` · ${r.date}`}
                             </div>
@@ -338,7 +338,7 @@ export function FaqSection({ event }) {
 
     return (
         <Section id="faq" title="FAQ">
-            <div className="rounded-3xl border border-white/10 bg-white/5 divide-y divide-white/10 overflow-hidden">
+            <div className="rounded-3xl border border-fg/10 bg-fg/5 divide-y divide-fg/10 overflow-hidden">
                 {faqs.map((f, i) => {
                     const isOpen = openIdx === i;
                     return (
@@ -346,13 +346,13 @@ export function FaqSection({ event }) {
                             <button
                                 onClick={() => setOpenIdx(isOpen ? null : i)}
                                 aria-expanded={isOpen}
-                                className="w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/5 transition"
+                                className="w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-fg/5 transition"
                             >
                                 <span className="font-display text-base font-medium">
                                     {f.q}
                                 </span>
                                 <ChevronDown
-                                    className={`w-5 h-5 shrink-0 text-white/60 transition-transform ${
+                                    className={`w-5 h-5 shrink-0 text-fg/60 transition-transform ${
                                         isOpen ? "rotate-180" : ""
                                     }`}
                                 />
@@ -366,7 +366,7 @@ export function FaqSection({ event }) {
                                         transition={{ duration: 0.2 }}
                                         className="overflow-hidden"
                                     >
-                                        <p className="px-5 pb-5 font-body text-sm text-white/70 leading-relaxed">
+                                        <p className="px-5 pb-5 font-body text-sm text-fg/70 leading-relaxed">
                                             {f.a}
                                         </p>
                                     </motion.div>
@@ -396,7 +396,7 @@ export function LocationSection({ event }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-testid="open-in-maps"
-                    className="flex items-center gap-1.5 font-body text-sm text-white/70 hover:text-white"
+                    className="flex items-center gap-1.5 font-body text-sm text-fg/70 hover:text-fg"
                 >
                     Open in Maps <ExternalLink className="w-3.5 h-3.5" />
                 </a>
@@ -408,16 +408,16 @@ export function LocationSection({ event }) {
                         <div className="font-display text-lg font-semibold">
                             {event.venue}
                         </div>
-                        <div className="text-white/70 mt-1">{address}</div>
+                        <div className="text-fg/70 mt-1">{address}</div>
                     </div>
                     {loc.getting_there && (
                         <div className="flex gap-3">
-                            <Navigation className="w-4 h-4 mt-0.5 shrink-0 text-white/50" />
+                            <Navigation className="w-4 h-4 mt-0.5 shrink-0 text-fg/50" />
                             <div>
-                                <div className="text-white/50 text-xs uppercase tracking-widest mb-1">
+                                <div className="text-fg/50 text-xs uppercase tracking-widest mb-1">
                                     Getting there
                                 </div>
-                                <p className="text-white/80 leading-relaxed">
+                                <p className="text-fg/80 leading-relaxed">
                                     {loc.getting_there}
                                 </p>
                             </div>
@@ -425,12 +425,12 @@ export function LocationSection({ event }) {
                     )}
                     {loc.parking && (
                         <div className="flex gap-3">
-                            <Car className="w-4 h-4 mt-0.5 shrink-0 text-white/50" />
+                            <Car className="w-4 h-4 mt-0.5 shrink-0 text-fg/50" />
                             <div>
-                                <div className="text-white/50 text-xs uppercase tracking-widest mb-1">
+                                <div className="text-fg/50 text-xs uppercase tracking-widest mb-1">
                                     Parking
                                 </div>
-                                <p className="text-white/80 leading-relaxed">
+                                <p className="text-fg/80 leading-relaxed">
                                     {loc.parking}
                                 </p>
                             </div>
@@ -443,7 +443,7 @@ export function LocationSection({ event }) {
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     data-testid="location-map"
-                    className="md:col-span-3 w-full h-64 md:h-80 rounded-3xl border border-white/10 bg-white/5"
+                    className="md:col-span-3 w-full h-64 md:h-80 rounded-3xl border border-fg/10 bg-fg/5"
                 />
             </div>
         </Section>

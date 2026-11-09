@@ -127,14 +127,14 @@ export default function GatePage() {
     if (loading || !user) {
         return (
             <AppShell hideBottomNav>
-                <div className="p-10 text-white/60 font-body">Loading…</div>
+                <div className="p-10 text-fg/60 font-body">Loading…</div>
             </AppShell>
         );
     }
     if (!["gate", "club_admin"].includes(user.role)) {
         return (
             <AppShell>
-                <div className="p-10 text-white/60 font-body">The gate scanner is for gate accounts.</div>
+                <div className="p-10 text-fg/60 font-body">The gate scanner is for gate accounts.</div>
             </AppShell>
         );
     }
@@ -150,12 +150,12 @@ export default function GatePage() {
                         <ScanLine className="w-7 h-7" /> Gate
                     </h1>
                     {!look && (
-                        <div className="flex rounded-full bg-white/5 border border-white/10 p-1" role="tablist">
+                        <div className="flex rounded-full bg-fg/5 border border-fg/10 p-1" role="tablist">
                             <button
                                 type="button"
                                 onClick={() => setMode("camera")}
                                 data-testid="mode-camera"
-                                className={`flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm ${mode === "camera" ? "bg-white text-black" : "text-white/70"}`}
+                                className={`flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm ${mode === "camera" ? "bg-fg text-canvas" : "text-fg/70"}`}
                             >
                                 <QrCode className="w-4 h-4" /> Scan QR
                             </button>
@@ -163,7 +163,7 @@ export default function GatePage() {
                                 type="button"
                                 onClick={() => setMode("type")}
                                 data-testid="mode-type"
-                                className={`flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm ${mode === "type" ? "bg-white text-black" : "text-white/70"}`}
+                                className={`flex items-center gap-2 rounded-full px-4 py-2 font-body text-sm ${mode === "type" ? "bg-fg text-canvas" : "text-fg/70"}`}
                             >
                                 <Keyboard className="w-4 h-4" /> Type code
                             </button>
@@ -217,14 +217,14 @@ export default function GatePage() {
 
                 <Card title="Recent scans" subtitle="Every scan at this venue, newest first, with your name on it.">
                     {log.length === 0 ? (
-                        <div className="font-body text-sm text-white/50">No scans yet.</div>
+                        <div className="font-body text-sm text-fg/50">No scans yet.</div>
                     ) : (
-                        <ul className="divide-y divide-white/5" data-testid="gate-log">
+                        <ul className="divide-y divide-fg/5" data-testid="gate-log">
                             {log.map((r) => (
                                 <li key={r.id} className="py-3 flex items-center justify-between gap-3 font-body text-sm">
                                     <div className="min-w-0">
-                                        <div className="text-white/90 truncate">{r.attendee_name || "Unknown ticket"}</div>
-                                        <div className="font-mono text-[11px] text-white/40">
+                                        <div className="text-fg/90 truncate">{r.attendee_name || "Unknown ticket"}</div>
+                                        <div className="font-mono text-[11px] text-fg/40">
                                             {r.ticket_code || "—"} · {fmtDateTime(r.scanned_at)} · {r.gate_name}
                                         </div>
                                     </div>
@@ -243,17 +243,17 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
     // Banner text: the final decision wins, otherwise the lookup result.
     const banner = decided
         ? decided.result === "admitted"
-            ? { cls: "border-emerald-400/60 bg-emerald-500/15", color: "text-emerald-300", Icon: CheckCircle2, text: "ADMITTED" }
+            ? { cls: "border-success/60 bg-success/15", color: "text-success-ink", Icon: CheckCircle2, text: "ADMITTED" }
             : decided.result === "declined"
-              ? { cls: "border-red-400/60 bg-red-500/15", color: "text-red-300", Icon: XCircle, text: "DECLINED" }
-              : { cls: "border-amber-400/60 bg-amber-500/15", color: "text-amber-300", Icon: AlertTriangle, text: "ALREADY USED" }
+              ? { cls: "border-danger/60 bg-danger/15", color: "text-danger-ink", Icon: XCircle, text: "DECLINED" }
+              : { cls: "border-warning/60 bg-warning/15", color: "text-warning-ink", Icon: AlertTriangle, text: "ALREADY USED" }
         : look.result === "scanned"
-          ? { cls: "border-emerald-400/40 bg-emerald-500/10", color: "text-emerald-300", Icon: CheckCircle2, text: "VALID — CHECK THE GUEST" }
+          ? { cls: "border-success/40 bg-success/10", color: "text-success-ink", Icon: CheckCircle2, text: "VALID — CHECK THE GUEST" }
           : look.result === "not_approved"
-            ? { cls: "border-red-400/60 bg-red-500/15", color: "text-red-300", Icon: XCircle, text: "NOT APPROVED — DO NOT ADMIT" }
+            ? { cls: "border-danger/60 bg-danger/15", color: "text-danger-ink", Icon: XCircle, text: "NOT APPROVED — DO NOT ADMIT" }
             : look.result === "already_used"
-              ? { cls: "border-amber-400/60 bg-amber-500/15", color: "text-amber-300", Icon: AlertTriangle, text: "ALREADY USED" }
-              : { cls: "border-red-400/60 bg-red-500/15", color: "text-red-300", Icon: XCircle, text: "INVALID TICKET" };
+              ? { cls: "border-warning/60 bg-warning/15", color: "text-warning-ink", Icon: AlertTriangle, text: "ALREADY USED" }
+              : { cls: "border-danger/60 bg-danger/15", color: "text-danger-ink", Icon: XCircle, text: "INVALID TICKET" };
 
   const reasonText = decided?.reason || look.reason;
 
@@ -266,21 +266,21 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
                         <div className={`font-display text-2xl md:text-3xl font-bold ${banner.color}`} data-testid="gate-banner">
                             {banner.text}
                         </div>
-                        {reasonText && <div className="font-body text-sm text-white/80 mt-1">{reasonText}</div>}
+                        {reasonText && <div className="font-body text-sm text-fg/80 mt-1">{reasonText}</div>}
                     </div>
                 </div>
             </div>
 
             {b && (
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-5 space-y-5">
+                <div className="rounded-3xl border border-fg/10 bg-fg/5 p-5 space-y-5">
                     <div>
-                        <div className="font-body text-[11px] uppercase tracking-widest text-white/40">Guest</div>
+                        <div className="font-body text-[11px] uppercase tracking-widest text-fg/40">Guest</div>
                         <div className="font-display text-2xl font-bold mt-1" data-testid="gate-guest-name">{b.attendee_name}</div>
-                        <div className="mt-2 flex flex-col gap-1 font-body text-sm text-white/80">
-                            <a href={`tel:${b.attendee_phone}`} className="flex items-center gap-2 hover:text-white">
+                        <div className="mt-2 flex flex-col gap-1 font-body text-sm text-fg/80">
+                            <a href={`tel:${b.attendee_phone}`} className="flex items-center gap-2 hover:text-fg">
                                 <Phone className="w-4 h-4" /> {b.attendee_phone}
                             </a>
-                            <a href={`mailto:${b.attendee_email}`} className="flex items-center gap-2 hover:text-white break-all">
+                            <a href={`mailto:${b.attendee_email}`} className="flex items-center gap-2 hover:text-fg break-all">
                                 <Mail className="w-4 h-4 shrink-0" /> {b.attendee_email}
                             </a>
                         </div>
@@ -296,8 +296,8 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
                     </dl>
 
                     <div>
-                        <div className="font-body text-[11px] uppercase tracking-widest text-white/40 mb-2">ID photo</div>
-                        {photoState === "loading" && <div className="text-white/50 font-body text-sm">Loading photo…</div>}
+                        <div className="font-body text-[11px] uppercase tracking-widest text-fg/40 mb-2">ID photo</div>
+                        {photoState === "loading" && <div className="text-fg/50 font-body text-sm">Loading photo…</div>}
                         {photo && (
                             <img
                                 src={photo}
@@ -307,7 +307,7 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
                             />
                         )}
                         {photoState !== "loading" && !photo && (
-                            <div className="text-white/50 font-body text-sm">
+                            <div className="text-fg/50 font-body text-sm">
                                 {b.photo_status === "deleted"
                                     ? "The ID photo has already been deleted."
                                     : "No ID photo was collected for this booking."}
@@ -324,7 +324,7 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
                         onClick={onApprove}
                         disabled={busy}
                         data-testid="approve-entry"
-                        className="rounded-2xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-display font-bold text-xl py-6 flex items-center justify-center gap-2 transition"
+                        className="rounded-2xl bg-success hover:bg-success disabled:opacity-50 text-canvas font-display font-bold text-xl py-6 flex items-center justify-center gap-2 transition"
                     >
                         <CheckCircle2 className="w-6 h-6" /> Approve
                     </button>
@@ -333,7 +333,7 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
                         onClick={onDecline}
                         disabled={busy}
                         data-testid="decline-entry"
-                        className="rounded-2xl bg-red-500 hover:bg-red-400 disabled:opacity-50 text-white font-display font-bold text-xl py-6 flex items-center justify-center gap-2 transition"
+                        className="rounded-2xl bg-danger hover:bg-danger disabled:opacity-50 text-white font-display font-bold text-xl py-6 flex items-center justify-center gap-2 transition"
                     >
                         <XCircle className="w-6 h-6" /> Decline
                     </button>
@@ -350,8 +350,8 @@ function GuestPanel({ look, b, photo, photoState, decided, eligible, busy, onApp
 function Info({ k, v, mono = false }) {
     return (
         <div>
-            <dt className="text-[11px] uppercase tracking-widest text-white/40">{k}</dt>
-            <dd className={`text-white/90 break-all ${mono ? "font-mono" : ""}`}>{v || "—"}</dd>
+            <dt className="text-[11px] uppercase tracking-widest text-fg/40">{k}</dt>
+            <dd className={`text-fg/90 break-all ${mono ? "font-mono" : ""}`}>{v || "—"}</dd>
         </div>
     );
 }
