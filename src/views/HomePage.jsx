@@ -6,6 +6,7 @@ import { Search, Bell } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import EventCard from "@/components/EventCard";
 import LocationChip from "@/components/LocationChip";
+import { LogoMark, Wordmark } from "@/components/Logo";
 import { api } from "@/lib/api";
 import { DEFAULT_CITY } from "@/lib/geo";
 import { useLocation } from "@/lib/useLocation";
@@ -69,10 +70,8 @@ export default function HomePage() {
                 <div className="md:hidden flex items-start justify-between mb-6">
                     <div>
                         <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 rounded-xl bg-brand flex items-center justify-center font-display font-bold">
-                                B
-                            </div>
-                            <div className="font-display text-xl">Live Now</div>
+                            <LogoMark size={40} />
+                            <Wordmark className="text-2xl" />
                         </div>
                         <LocationChip className="mt-2" />
                     </div>

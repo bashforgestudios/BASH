@@ -10,6 +10,7 @@ import { formatErr } from "@/lib/api";
 import { homeFor, safeNext } from "@/lib/roleHome";
 import { CITIES } from "@/lib/geo";
 import BusinessLeadForm from "@/components/BusinessLeadForm";
+import { LogoMark, Wordmark } from "@/components/Logo";
 
 const input =
     "w-full rounded-xl bg-fg/5 border border-fg/10 px-4 py-3.5 font-body text-sm placeholder:text-fg/30 focus:outline-none focus:ring-2 focus:ring-brand/40";
@@ -216,9 +217,9 @@ export default function AuthPage({ mode = "login" }) {
     return (
         <div className="min-h-screen flex items-center justify-center p-5">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-                <Link href="/" className="flex items-center gap-2 justify-center mb-8" data-testid="auth-brand-link">
-                    <div className="w-10 h-10 rounded-xl bg-brand flex items-center justify-center font-display font-bold">B</div>
-                    <span className="font-display text-2xl">Bash</span>
+                <Link href="/" className="flex items-center gap-3 justify-center mb-8" data-testid="auth-brand-link">
+                    <LogoMark size={48} />
+                    <Wordmark className="text-3xl" />
                 </Link>
 
                 <h1 className="font-display text-4xl font-bold tracking-tight text-center">{title}</h1>

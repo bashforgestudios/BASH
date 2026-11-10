@@ -11,6 +11,7 @@ import {
     ArrowLeft, Sun, Moon, Monitor, Clock, MoreVertical, Ticket, Palette, QrCode, Compass, Lock, Users, X,
 } from "lucide-react";
 import AppShell from "@/components/AppShell";
+import CalendarLauncher from "@/components/CalendarLauncher";
 import QRCode from "@/components/QRCode";
 import Modal from "@/components/Modal";
 import { LogoMark, Wordmark } from "@/components/Logo";
@@ -202,6 +203,8 @@ export default function ProfilePage() {
                         </div>
                         <Ticket className="absolute right-5 top-1/2 -translate-y-1/2 w-20 h-20 text-white/15 -rotate-12" />
                     </Link>
+
+                    <CalendarLauncher />
 
                     <Section title="Tickets">
                         <Row icon={Ticket} label="My Tickets" value={String(profile.stats.tickets)} href="/tickets" />

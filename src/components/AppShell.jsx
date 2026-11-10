@@ -44,7 +44,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
     // Bottom-nav tabs: the role's links plus Log out / Sign in.
     const items = [
         ...links.map((l) => ({ ...l, testid: `mob-nav-${l.id}` })),
-        user
+        user && user.role && user.role !== "user"
             ? {
                   id: "logout",
                   label: "Log out",
@@ -55,8 +55,10 @@ export default function AppShell({ children, hideBottomNav = false }) {
                       nav("/");
                   },
               }
-            : { id: "account", label: "Sign in", icon: User, href: "/login", testid: "mob-nav-account" },
-    ];
+            : user
+              ? null
+              : { id: "account", label: "Sign in", icon: User, href: "/login", testid: "mob-nav-account" },
+    ].filter(Boolean);
     const activeIndex = items.findIndex(
         (it) => it.href && (it.href === "/" ? pathname === "/" : pathname === it.href || pathname.startsWith(it.href + "/")),
     );
@@ -125,10 +127,49 @@ export default function AppShell({ children, hideBottomNav = false }) {
 
             <main className="flex-1">{children}</main>
 
+            {/* Desktop footer */}
+            {!hideBottomNav && (
+                <footer className="hidden md:block mt-16 border-t border-fg/10" data-testid="site-footer">
+                    <div className="mx-auto flex max-w-6xl items-start justify-between gap-10 px-10 py-10">
+                        <div>
+                            <Link href="/" className="flex items-center gap-2">
+                                <LogoMark size={32} />
+                                <Wordmark className="text-xl" />
+                            </Link>
+                            <p className="mt-3 max-w-xs font-body text-sm text-fg/50">
+                                Live concerts, club nights and festivals across India. Booked in under 60 seconds.
+                            </p>
+                        </div>
+                        <nav className="flex flex-wrap items-center justify-end gap-x-7 gap-y-2 font-body text-sm text-fg/60">
+                            {links.map((l) => (
+                                <Link key={l.id} href={l.href} className="transition hover:text-fg">
+                                    {l.label}
+                                </Link>
+                            ))}
+                            {!user && (
+                                <Link href="/login" className="transition hover:text-fg">
+                                    Sign in
+                                </Link>
+                            )}
+                            <Link href="/business" className="transition hover:text-fg">
+                                For clubs
+                            </Link>
+                        </nav>
+                    </div>
+                    <div className="border-t border-fg/5 py-4 text-center font-body text-xs text-fg/35">
+                        © {new Date().getFullYear()} Bash. All rights reserved.
+                    </div>
+                </footer>
+            )}
+
             {/* Mobile bottom nav: a frosted-glass pill slides under the active tab */}
             {!hideBottomNav && (
-                <nav className="md:hidden sticky bottom-0 z-40 px-4 pb-3 pt-2 bg-gradient-to-t from-canvas via-canvas/80 to-transparent pointer-events-none">
-                    <div className="glass-nav pointer-events-auto relative flex items-stretch rounded-full p-1.5">
+                <nav
+                    aria-label="Primary"
+                    className="md:hidden sticky bottom-0 z-40 px-5 pt-2 pointer-events-none"
+                    style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+                >
+                    <div className="glass-nav pointer-events-auto relative mx-auto flex max-w-xs items-stretch rounded-full p-1.5">
                         {activeIndex >= 0 && (
                             <span
                                 aria-hidden
@@ -141,8 +182,8 @@ export default function AppShell({ children, hideBottomNav = false }) {
                         )}
                         {items.map((it, i) => {
                             const Icon = it.icon;
-                            const cls = `relative z-10 flex flex-1 flex-col items-center gap-1 rounded-full py-2 text-[11px] font-body transition-colors duration-300 ${
-                                i === activeIndex ? "text-fg" : "text-fg/50"
+                            const cls = `relative z-10 flex flex-1 flex-col items-center justify-center gap-0.5 rounded-full py-2 text-[10px] font-body tracking-wide transition-colors duration-300 ${
+                                i === activeIndex ? "text-fg font-semibold" : "text-fg/50"
                             }`;
                             const inner = (
                                 <>
