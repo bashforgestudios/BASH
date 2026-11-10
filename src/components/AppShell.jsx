@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { LogoMark, Wordmark } from "@/components/Logo";
 import NavLink from "@/components/NavLink";
 import LocationChip from "@/components/LocationChip";
+import SiteFooter from "@/components/SiteFooter";
 import { useNav } from "@/lib/useNav";
 import { useAuth } from "@/context/AuthContext";
 import { Home, Ticket, LogOut, LayoutDashboard, ScanLine, Terminal, User } from "lucide-react";
@@ -127,40 +128,7 @@ export default function AppShell({ children, hideBottomNav = false }) {
 
             <main className="flex-1">{children}</main>
 
-            {/* Desktop footer */}
-            {!hideBottomNav && (
-                <footer className="hidden md:block mt-16 border-t border-fg/10" data-testid="site-footer">
-                    <div className="mx-auto flex max-w-6xl items-start justify-between gap-10 px-10 py-10">
-                        <div>
-                            <Link href="/" className="flex items-center gap-2">
-                                <LogoMark size={32} />
-                                <Wordmark className="text-xl" />
-                            </Link>
-                            <p className="mt-3 max-w-xs font-body text-sm text-fg/50">
-                                Live concerts, club nights and festivals across India. Booked in under 60 seconds.
-                            </p>
-                        </div>
-                        <nav className="flex flex-wrap items-center justify-end gap-x-7 gap-y-2 font-body text-sm text-fg/60">
-                            {links.map((l) => (
-                                <Link key={l.id} href={l.href} className="transition hover:text-fg">
-                                    {l.label}
-                                </Link>
-                            ))}
-                            {!user && (
-                                <Link href="/login" className="transition hover:text-fg">
-                                    Sign in
-                                </Link>
-                            )}
-                            <Link href="/business" className="transition hover:text-fg">
-                                For clubs
-                            </Link>
-                        </nav>
-                    </div>
-                    <div className="border-t border-fg/5 py-4 text-center font-body text-xs text-fg/35">
-                        © {new Date().getFullYear()} Bash. All rights reserved.
-                    </div>
-                </footer>
-            )}
+            {!hideBottomNav && <SiteFooter user={user} />}
 
             {/* Mobile bottom nav: a frosted-glass pill slides under the active tab */}
             {!hideBottomNav && (

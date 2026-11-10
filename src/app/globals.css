@@ -325,3 +325,39 @@ html {
 @media (prefers-reduced-motion: reduce) {
     .glass-slider, .city-menu { transition: none; animation: none; }
 }
+
+/* ---- Footer "Coming soon" sticker: brushed-metal gradient with a reflection that sweeps across ---- */
+.sticker-metal {
+    /* positioned by the "absolute" utility on the element itself (don't set position here) */
+    overflow: hidden;
+    isolation: isolate;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.6rem;
+    font-family: "Clash Display", "General Sans", sans-serif;
+    font-weight: 800;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #2a2b30;
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.9), 0 -1px 0 rgb(0 0 0 / 0.18);
+    background: linear-gradient(135deg, #8b8d94 0%, #f5f6f8 16%, #b6b8bf 32%, #ffffff 48%, #9a9ca4 66%, #eef0f3 82%, #868890 100%);
+    border: 1px solid rgb(255 255 255 / 0.8);
+    box-shadow: 0 8px 18px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.95), inset 0 -2px 5px rgb(0 0 0 / 0.28);
+}
+.sticker-metal::after {
+    content: "";
+    position: absolute;
+    inset: -50% -40%;
+    background: linear-gradient(105deg, transparent 42%, rgb(255 255 255 / 0.9) 50%, transparent 58%);
+    transform: translateX(-80%);
+    animation: sticker-sheen 3.8s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes sticker-sheen {
+    0%, 50% { transform: translateX(-80%); }
+    100% { transform: translateX(80%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .sticker-metal::after { animation: none; opacity: 0.35; transform: none; }
+}
