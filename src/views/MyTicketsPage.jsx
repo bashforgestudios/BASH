@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useNav } from "@/lib/useNav";
@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CalendarPlus, Share2 } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import TicketPass from "@/components/TicketPass";
+import EventsCalendar, { ticketDate } from "@/components/EventsCalendar";
 import { api, inr } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 
@@ -19,6 +20,8 @@ export default function MyTicketsPage() {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState("upcoming");
+    const [calFor, setCalFor] = useState(null); // ticket id whose Events Calendar is open
+    const closeCal = useCallback(() => setCalFor(null), []);
 
     useEffect(() => {
         if (authLoading) return;
@@ -51,8 +54,8 @@ export default function MyTicketsPage() {
     };
 
     const addToCal = (t) => {
-        const d = new Date(t.event_date + " " + t.event_time);
-        if (Number.isNaN(d.getTime())) {
+        const d = ticketDate(t);
+        if (!d) {
             alert("Could not read this event's date for the calendar.");
             return;
         }
@@ -127,12 +130,20 @@ export default function MyTicketsPage() {
                                 index={i}
                                 highlighted={t.id === highlight}
                                 onShare={() => share(t)}
-                                onCal={() => addToCal(t)}
+                                onCal={() => setCalFor(t.id)}
                             />
                         ))}
                     </div>
                 )}
             </div>
+            {calFor && (
+                <EventsCalendar
+                    tickets={tickets.filter((t) => !["rejected", "cancelled"].includes(t.status))}
+                    selectedId={calFor}
+                    onClose={closeCal}
+                    onAdd={addToCal}
+                />
+            )}
         </AppShell>
     );
 }
