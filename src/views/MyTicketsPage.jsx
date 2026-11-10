@@ -8,7 +8,9 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CalendarPlus, Share2 } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import TicketPass from "@/components/TicketPass";
-import EventsCalendar, { ticketDate } from "@/components/EventsCalendar";
+import EventsCalendar from "@/components/EventsCalendar";
+import CalendarLauncher from "@/components/CalendarLauncher";
+import { openGoogleCalendar } from "@/lib/calendar";
 import { api, inr } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 
@@ -53,16 +55,7 @@ export default function MyTicketsPage() {
         } catch {}
     };
 
-    const addToCal = (t) => {
-        const d = ticketDate(t);
-        if (!d) {
-            alert("Could not read this event's date for the calendar.");
-            return;
-        }
-        const start = encodeURIComponent(d.toISOString().replace(/[-:]|\.\d{3}/g, ""));
-        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(t.event_title)}&location=${encodeURIComponent(t.event_venue + ", " + t.event_city)}&dates=${start}/${start}`;
-        window.open(url, "_blank");
-    };
+    const addToCal = openGoogleCalendar;
 
     return (
         <AppShell>
@@ -79,6 +72,8 @@ export default function MyTicketsPage() {
                         Your Events
                     </h1>
                 </div>
+
+                {!loading && <CalendarLauncher tickets={tickets} className="mb-6" />}
 
                 <div
                     role="tablist"

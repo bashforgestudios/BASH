@@ -1,19 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ticketDate } from "@/lib/calendar";
 import { ChevronLeft, Map as MapIcon, CalendarDays, CalendarPlus, MapPin, Clock } from "lucide-react";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const ACCENT = "#c8f169"; // volt, as in the reference design
 
-/** "30 March 2026" + "9:30 PM" -> Date (or null when the text can't be read). */
-export function ticketDate(t) {
-    const d = new Date(`${t.event_date} ${t.event_time || ""}`.trim());
-    if (!Number.isNaN(d.getTime())) return d;
-    const d2 = new Date(t.event_date);
-    return Number.isNaN(d2.getTime()) ? null : d2;
-}
+export { ticketDate };
 
 const keyOf = (y, m, d) => `${y}-${m}-${d}`;
 
